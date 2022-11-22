@@ -1,0 +1,5 @@
+ocpp:
+  charge-point:
+    boot-notification:
+      chargePointModel: ExtrawestChargePoint
+      chargePointVendor: ExtrawestChargePoint
