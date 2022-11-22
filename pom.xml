@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.extrawest.ocpp</groupId>
-    <artifactId>station-emulation</artifactId>
+    <artifactId>ocpp-charge-point-emulator-cli</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ocpp-station-emulation</name>
     <description>ocpp-station-emulation</description>

@@ -1,4 +1,4 @@
-package com.extrawest.ocpp.stationemulation;
+package com.extrawest.ocpp.emulator.chargepoint.cli;
 
 import eu.chargetime.ocpp.ClientEvents;
 import eu.chargetime.ocpp.JSONClient;
@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 @Slf4j
-public class OcppStationEmulationApplication {
+public class OcppChargePointEmulatorCliApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(OcppStationEmulationApplication.class, args);
+        SpringApplication.run(OcppChargePointEmulatorCliApplication.class, args);
     }
 
     @Bean
