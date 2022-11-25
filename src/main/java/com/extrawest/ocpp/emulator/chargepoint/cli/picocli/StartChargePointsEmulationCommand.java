@@ -1,5 +1,10 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.picocli;
 
+import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationParameters;
+import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -9,11 +14,16 @@ import java.util.concurrent.Callable;
 
 @Component
 @Command(name = "startEmulationCommand", mixinStandardHelpOptions = true, helpCommand = true)
-public class StartEmulationCommand implements Callable<Integer> {
+public class StartChargePointsEmulationCommand implements Callable<Integer> {
     @CommandLine.Spec
     CommandLine.Model.CommandSpec spec;
     private String csUrl;
     private int stationCount;
+    private final ChargePointEmulatorsService chargePointEmulatorsService;
+
+    public StartChargePointsEmulationCommand(@Autowired ChargePointEmulatorsService chargePointEmulatorsService) {
+        this.chargePointEmulatorsService = chargePointEmulatorsService;
+    }
 
     @Option(names = {"--csUrl", "-C"},
             description = "Specify a url of Central System with 'ws://' schema",
@@ -41,8 +51,9 @@ public class StartEmulationCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
+        chargePointEmulatorsService.startEmulation(new ChargePointsEmulationParameters(csUrl, stationCount));
         System.out.println("Url: " + csUrl + ", station count: " + stationCount);
-        return 23;
+        return 0;
     }
 
 }
