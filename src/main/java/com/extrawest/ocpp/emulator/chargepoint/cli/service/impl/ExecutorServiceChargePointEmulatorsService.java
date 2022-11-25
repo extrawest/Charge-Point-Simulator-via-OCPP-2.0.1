@@ -20,7 +20,7 @@ public class ExecutorServiceChargePointEmulatorsService implements ChargePointEm
 
     private final ChargePointEmulatorFactory chargePointEmulatorFactory;
 
-    @Value("${ocpp.charge-point.id-index-prefix}")
+    @Value("${ocpp.charge-point.id-index-prefix:CP}")
     private final String chargePointIdIndexPrefix;
 
     @Override
