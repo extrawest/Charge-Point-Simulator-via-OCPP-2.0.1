@@ -10,22 +10,22 @@ import org.springframework.stereotype.Component;
 import static picocli.CommandLine.Model.UsageMessageSpec.*;
 
 @Component
-public class MyApplicationRunner implements CommandLineRunner, ExitCodeGenerator {
+public class ChargePointsEmulationRunner implements CommandLineRunner, ExitCodeGenerator {
 
-    private final StartEmulationCommand startEmulationCommand;
+    private final StartChargePointsEmulationCommand startChargePointsEmulationCommand;
 
-    private final IFactory factory; // auto-configured to inject PicocliSpringFactory
+    private final IFactory factory;
 
     private int exitCode;
 
-    public MyApplicationRunner(StartEmulationCommand startEmulationCommand, IFactory factory) {
-        this.startEmulationCommand = startEmulationCommand;
+    public ChargePointsEmulationRunner(StartChargePointsEmulationCommand startChargePointsEmulationCommand, IFactory factory) {
+        this.startChargePointsEmulationCommand = startChargePointsEmulationCommand;
         this.factory = factory;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        CommandLine commandLine = new CommandLine(startEmulationCommand, factory);
+        CommandLine commandLine = new CommandLine(startChargePointsEmulationCommand, factory);
         commandLine.getHelpSectionMap().put(SECTION_KEY_FOOTER, new FooterRenderer());
         exitCode = commandLine.execute(args);
     }
