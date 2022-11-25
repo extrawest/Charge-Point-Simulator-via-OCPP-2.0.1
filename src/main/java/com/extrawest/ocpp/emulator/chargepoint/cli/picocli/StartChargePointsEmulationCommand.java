@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.picocli;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationParameters;
+import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
@@ -14,6 +14,7 @@ import java.util.concurrent.Callable;
 
 @Component
 @Command(name = "startEmulationCommand", mixinStandardHelpOptions = true, helpCommand = true)
+@Slf4j
 public class StartChargePointsEmulationCommand implements Callable<Integer> {
     @CommandLine.Spec
     CommandLine.Model.CommandSpec spec;
@@ -50,10 +51,9 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
     }
 
     @Override
-    public Integer call() {
+    public Integer call() throws EmulationException {
         chargePointEmulatorsService.startEmulation(new ChargePointsEmulationParameters(csUrl, stationCount));
         System.out.println("Url: " + csUrl + ", station count: " + stationCount);
         return 0;
     }
-
 }
