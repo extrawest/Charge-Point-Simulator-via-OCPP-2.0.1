@@ -31,7 +31,8 @@ public class ExecutorServiceChargePointEmulatorsService implements ChargePointEm
         tryCreateAndStartEmulatorsOrThrow(parameters);
     }
 
-    private void tryCreateAndStartEmulatorsOrThrow(ChargePointsEmulationParameters parameters) throws EmulationException {
+    private void tryCreateAndStartEmulatorsOrThrow(ChargePointsEmulationParameters parameters)
+        throws EmulationException {
         try {
             createAndStartEmulators(parameters);
         } catch (Exception e) {
