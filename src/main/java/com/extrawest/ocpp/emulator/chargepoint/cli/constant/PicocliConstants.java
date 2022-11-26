@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 public class PicocliConstants {
 
     public static final int SUCCESS = 0;
+    public static final int ERROR_CENTRAL_SYSTEM_UNAVAILABLE = 1;
 }
