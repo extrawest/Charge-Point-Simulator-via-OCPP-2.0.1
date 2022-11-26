@@ -4,19 +4,16 @@ import picocli.CommandLine;
 import picocli.CommandLine.IFactory;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.stereotype.Component;
 
 import static picocli.CommandLine.Model.UsageMessageSpec.*;
 
 @Component
-public class ChargePointsEmulationRunner implements CommandLineRunner, ExitCodeGenerator {
+public class ChargePointsEmulationRunner implements CommandLineRunner {
 
     private final StartChargePointsEmulationCommand startChargePointsEmulationCommand;
 
     private final IFactory factory;
-
-    private int exitCode;
 
     public ChargePointsEmulationRunner(StartChargePointsEmulationCommand startChargePointsEmulationCommand, IFactory factory) {
         this.startChargePointsEmulationCommand = startChargePointsEmulationCommand;
@@ -24,14 +21,9 @@ public class ChargePointsEmulationRunner implements CommandLineRunner, ExitCodeG
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         CommandLine commandLine = new CommandLine(startChargePointsEmulationCommand, factory);
         commandLine.getHelpSectionMap().put(SECTION_KEY_FOOTER, new FooterRenderer());
-        exitCode = commandLine.execute(args);
-    }
-
-    @Override
-    public int getExitCode() {
-        return exitCode;
+        commandLine.execute(args);
     }
 }
