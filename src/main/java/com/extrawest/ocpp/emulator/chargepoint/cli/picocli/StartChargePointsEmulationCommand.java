@@ -1,5 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.picocli;
 
+import com.extrawest.ocpp.emulator.chargepoint.cli.constant.PicocliConstants;
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
@@ -53,7 +54,6 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
     @Override
     public Integer call() throws EmulationException {
         chargePointEmulatorsService.startEmulation(new ChargePointsEmulationParameters(csUrl, stationCount));
-        System.out.println("Url: " + csUrl + ", station count: " + stationCount);
-        return 0;
+        return PicocliConstants.SUCCESS;
     }
 }
