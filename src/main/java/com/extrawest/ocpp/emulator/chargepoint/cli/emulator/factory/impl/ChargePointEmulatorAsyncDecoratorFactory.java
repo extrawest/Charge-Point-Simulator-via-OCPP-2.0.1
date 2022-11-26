@@ -5,8 +5,8 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.factory.ChargePointEmulatorFactory;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.ChargePointEmulatorAsyncDecorator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.ChargePointEmulatorImpl;
+import com.extrawest.ocpp.emulator.chargepoint.cli.euchargetime.IClientAPIFactory;
 import eu.chargetime.ocpp.ClientEvents;
-import eu.chargetime.ocpp.IClientAPI;
 import eu.chargetime.ocpp.feature.profile.ClientCoreProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +23,7 @@ public class ChargePointEmulatorAsyncDecoratorFactory implements ChargePointEmul
 
     private final ScheduledExecutorService scheduledExecutorService;
 
-    private final IClientAPI ocppClient;
+    private final IClientAPIFactory ocppClientFactory;
 
     private final ClientEvents ocppClientEvents;
 
@@ -43,7 +43,7 @@ public class ChargePointEmulatorAsyncDecoratorFactory implements ChargePointEmul
     private ChargePointEmulator createDecorated(CreateChargePointParameters createChargePointParameters) {
         return new ChargePointEmulatorImpl(
             createChargePointParameters.getCentralSystemUrl(),
-            ocppClient,
+            ocppClientFactory.createNewClientApi(),
             ocppClientEvents,
             ocppClientCoreProfile,
             scheduledExecutorService,
