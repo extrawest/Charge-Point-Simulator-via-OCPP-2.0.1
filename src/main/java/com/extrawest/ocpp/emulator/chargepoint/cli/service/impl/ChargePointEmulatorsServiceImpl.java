@@ -20,7 +20,7 @@ import java.util.stream.LongStream;
 @RequiredArgsConstructor
 @Validated
 @Slf4j
-public class ExecutorServiceChargePointEmulatorsService implements ChargePointEmulatorsService {
+public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsService {
 
     private final ChargePointEmulatorFactory chargePointEmulatorFactory;
 
