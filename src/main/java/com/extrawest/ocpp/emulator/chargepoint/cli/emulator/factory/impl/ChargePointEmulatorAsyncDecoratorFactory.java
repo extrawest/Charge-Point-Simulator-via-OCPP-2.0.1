@@ -3,7 +3,6 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.factory.impl;
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.factory.ChargePointEmulatorFactory;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.ChargePointEmulatorAsyncDecorator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.ChargePointEmulatorImpl;
 import com.extrawest.ocpp.emulator.chargepoint.cli.euchargetime.IClientAPIFactory;
 import eu.chargetime.ocpp.ClientEvents;
@@ -12,14 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledExecutorService;
 
 @Component
 @RequiredArgsConstructor
 public class ChargePointEmulatorAsyncDecoratorFactory implements ChargePointEmulatorFactory {
-
-    private final Executor executor;
 
     private final ScheduledExecutorService scheduledExecutorService;
 
@@ -37,10 +33,6 @@ public class ChargePointEmulatorAsyncDecoratorFactory implements ChargePointEmul
 
     @Override
     public ChargePointEmulator createChargePointEmulator(CreateChargePointParameters createChargePointParameters) {
-        return new ChargePointEmulatorAsyncDecorator(executor, createDecorated(createChargePointParameters));
-    }
-
-    private ChargePointEmulator createDecorated(CreateChargePointParameters createChargePointParameters) {
         return new ChargePointEmulatorImpl(
             createChargePointParameters.getCentralSystemUrl(),
             ocppClientFactory.createNewClientApi(),
