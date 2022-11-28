@@ -14,5 +14,5 @@ public class ChargePointsEmulationParameters {
     private final String centralSystemUrl;
 
     @Min(1)
-    private final long chargePointsCount;
+    private final int chargePointsCount;
 }
