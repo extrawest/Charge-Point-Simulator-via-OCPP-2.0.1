@@ -2,8 +2,8 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.service.impl;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.factory.ChargePointEmulatorFactory;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.ChargePointEmulatorsGroup;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 @Service
@@ -41,14 +42,15 @@ public class ExecutorServiceChargePointEmulatorsService implements ChargePointEm
         }
     }
 
-    private void createAndStartEmulators(ChargePointsEmulationParameters parameters) {
-        LongStream.range(0, parameters.getChargePointsCount())
+    private void createAndStartEmulators(ChargePointsEmulationParameters parameters) throws EmulationException {
+        var chargePointEmulationGroup = LongStream.range(0, parameters.getChargePointsCount())
             .parallel()
             .mapToObj(
                 i -> new CreateChargePointParameters(parameters.getCentralSystemUrl(), createChargePointIdForIndex(i))
             )
             .map(chargePointEmulatorFactory::createChargePointEmulator)
-            .forEach(ChargePointEmulator::start);
+            .collect(Collectors.collectingAndThen(Collectors.toList(), ChargePointEmulatorsGroup::new));
+        chargePointEmulationGroup.start();
     }
 
     private String createChargePointIdForIndex(long chargePointIndex) {
