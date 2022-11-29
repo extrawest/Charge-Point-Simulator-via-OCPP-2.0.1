@@ -72,19 +72,33 @@ public class ChargePointEmulatorImpl implements ChargePointEmulator {
         var bootNotificationRequest =
             ocppClientCoreProfile.createBootNotificationRequest(chargePointVendor, chargePointModel);
         return ocppClient.send(bootNotificationRequest)
-            .thenApply(BootNotificationConfirmation.class::cast)
+            .thenApply(confirmation -> {
+                var bootNotificationConfirmation = (BootNotificationConfirmation) confirmation;
+                log.debug(
+                    "ChargePointEmulator (id=%s): BootNotificationConfirmation received: %s".formatted(
+                        chargePointId, bootNotificationConfirmation
+                    )
+                );
+                return bootNotificationConfirmation;
+            })
             .toCompletableFuture()
             .get();
     }
 
     private void scheduleHeartbeat(int heartbeatIntervalSeconds) {
-        heartbeatScheduledFuture = scheduledExecutorService.schedule(
-            this::trySendHeartbeatOrThrow, heartbeatIntervalSeconds, TimeUnit.SECONDS
+        log.debug("Scheduling heartbeat interval for %s seconds".formatted(heartbeatIntervalSeconds));
+        heartbeatScheduledFuture = scheduledExecutorService.scheduleAtFixedRate(
+            this::trySendHeartbeatOrThrow, heartbeatIntervalSeconds, heartbeatIntervalSeconds, TimeUnit.SECONDS
         );
     }
 
     private void sendHeartbeat() throws OccurenceConstraintException, UnsupportedFeatureException {
-        ocppClient.send(ocppClientCoreProfile.createHeartbeatRequest());
+        log.debug("ChargePointEmulator (id=%s): sending HeartbeatRequest".formatted(chargePointId));
+        ocppClient.send(ocppClientCoreProfile.createHeartbeatRequest()).thenAccept(
+            confirmation -> log.debug(
+                "ChargePointEmulator (id=%s): HeartbeatConfirmation received: %s".formatted(chargePointId, confirmation)
+            )
+        );
     }
 
     private void trySendHeartbeatOrThrow() {
