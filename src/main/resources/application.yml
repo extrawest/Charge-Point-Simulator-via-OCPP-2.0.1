@@ -1,0 +1,20 @@
+ocpp:
+  charge-point:
+    boot-notification:
+      chargePointModel: ExtrawestChargePoint
+      chargePointVendor: ExtrawestChargePoint
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+logging:
+  level:
+    com:
+      extrawest:
+        ocpp:
+          emulator:
+            chargepoint:
+              cli: debug

@@ -9,31 +9,57 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.extrawest.ocpp</groupId>
-    <artifactId>station-emulation</artifactId>
+    <artifactId>ocpp-charge-point-emulator-cli</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ocpp-station-emulation</name>
     <description>ocpp-station-emulation</description>
     <properties>
         <java.version>17</java.version>
+        <eu.chargetime.ocpp.v1_6.version>1.1.0</eu.chargetime.ocpp.v1_6.version>
+        <picocli-spring-boot-starter.version>4.7.0</picocli-spring-boot-starter.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>eu.chargetime.ocpp</groupId>
+            <artifactId>v1_6</artifactId>
+            <version>${eu.chargetime.ocpp.v1_6.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli-spring-boot-starter</artifactId>
+            <version>${picocli-spring-boot-starter.version}</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
             </plugin>
         </plugins>
     </build>

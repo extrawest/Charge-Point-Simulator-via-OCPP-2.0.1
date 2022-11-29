@@ -1,4 +1,4 @@
-package com.extrawest.ocpp.stationemulation;
+package com.extrawest.ocpp.emulator.chargepoint.cli;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
