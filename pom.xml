@@ -11,7 +11,7 @@
     <groupId>com.extrawest.ocpp</groupId>
     <artifactId>ocpp-charge-point-emulator-cli</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ocpp-station-emulation</name>
+    <name>${project.artifactId}</name>
     <description>ocpp-station-emulation</description>
     <properties>
         <java.version>17</java.version>
@@ -48,6 +48,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
