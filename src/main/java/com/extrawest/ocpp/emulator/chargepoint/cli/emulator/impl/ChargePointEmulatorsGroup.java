@@ -19,7 +19,7 @@ public class ChargePointEmulatorsGroup implements ChargePointEmulator {
         var startedEmulators = new ArrayList<ChargePointEmulator>(emulators.size());
         try {
             for (var chargePointEmulator : emulators) {
-                new DelayedSchedulerDecorator(chargePointEmulator).start();
+                chargePointEmulator.start();
                 startedEmulators.add(chargePointEmulator);
             }
         } catch (EmulationException e) {

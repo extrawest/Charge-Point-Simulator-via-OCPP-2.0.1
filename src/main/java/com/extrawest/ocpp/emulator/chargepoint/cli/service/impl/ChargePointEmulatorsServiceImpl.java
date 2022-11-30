@@ -4,7 +4,6 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationPara
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.factory.ChargePointEmulatorFactory;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.ChargePointEmulatorsGroup;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.DelayedSchedulerDecorator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +50,7 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
             )
             .map(chargePointEmulatorFactory::createChargePointEmulator)
             .collect(Collectors.collectingAndThen(Collectors.toList(), ChargePointEmulatorsGroup::new));
-        new DelayedSchedulerDecorator(chargePointEmulationGroup).start();
+        chargePointEmulationGroup.start();
     }
 
     private String createChargePointIdForIndex(long chargePointIndex) {
