@@ -3,11 +3,11 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.factory.impl;
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.factory.ChargePointEmulatorFactory;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.ChargePointEmulatorImpl;
-import com.extrawest.ocpp.emulator.chargepoint.cli.euchargetime.IClientAPIFactory;
-import eu.chargetime.ocpp.ClientEvents;
-import eu.chargetime.ocpp.feature.profile.ClientCoreProfile;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.WebSocketChargePointEmulator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,29 +19,29 @@ public class ChargePointEmulatorAsyncDecoratorFactory implements ChargePointEmul
 
     private final ScheduledExecutorService scheduledExecutorService;
 
-    private final IClientAPIFactory ocppClientFactory;
-
-    private final ClientEvents ocppClientEvents;
-
-    private final ClientCoreProfile ocppClientCoreProfile;
-
     @Value("${ocpp.charge-point.boot-notification.chargePointModel}")
     private final String chargePointModel;
 
     @Value("${ocpp.charge-point.boot-notification.chargePointVendor}")
     private final String chargePointVendor;
 
+    private final ObjectMapper objectMapper;
+
+    private final WebSocketClient webSocketClient;
+
+    private final CallFactory callFactory;
+
     @Override
     public ChargePointEmulator createChargePointEmulator(CreateChargePointParameters createChargePointParameters) {
-        return new ChargePointEmulatorImpl(
+        return new WebSocketChargePointEmulator(
+            callFactory,
             createChargePointParameters.getCentralSystemUrl(),
-            ocppClientFactory.createNewClientApi(),
-            ocppClientEvents,
-            ocppClientCoreProfile,
+            createChargePointParameters.getChargePointId(),
             scheduledExecutorService,
             chargePointModel,
             chargePointVendor,
-            createChargePointParameters.getChargePointId()
+            objectMapper,
+            webSocketClient
         );
     }
 }
