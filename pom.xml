@@ -17,6 +17,11 @@
         <java.version>17</java.version>
         <eu.chargetime.ocpp.v1_6.version>1.1.0</eu.chargetime.ocpp.v1_6.version>
         <picocli-spring-boot-starter.version>4.7.0</picocli-spring-boot-starter.version>
+        <jetty-el.version>11.0.12</jetty-el.version>
+        <jetty-jsp.version>11.0.12</jetty-jsp.version>
+        <jetty-reactive-httpclient.version>11.0.12</jetty-reactive-httpclient.version>
+        <jetty.version>11.0.12</jetty.version>
+        <websocket-jetty-client.version>11.0.12</websocket-jetty-client.version>
     </properties>
     <dependencies>
         <dependency>
@@ -45,6 +50,11 @@
             <groupId>info.picocli</groupId>
             <artifactId>picocli-spring-boot-starter</artifactId>
             <version>${picocli-spring-boot-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-jetty-client</artifactId>
+            <version>${websocket-jetty-client.version}</version>
         </dependency>
     </dependencies>
     <build>
