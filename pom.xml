@@ -22,6 +22,7 @@
         <jetty-reactive-httpclient.version>11.0.12</jetty-reactive-httpclient.version>
         <jetty.version>11.0.12</jetty.version>
         <websocket-jetty-client.version>11.0.12</websocket-jetty-client.version>
+        <jackson.version>2.14.1</jackson.version>
     </properties>
     <dependencies>
         <dependency>
@@ -55,6 +56,16 @@
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-jetty-client</artifactId>
             <version>${websocket-jetty-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
     </dependencies>
     <build>
