@@ -29,7 +29,7 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
     }
 
     @Option(names = {"--csUrl", "-C"},
-            description = "Specify a url of Central System with 'ws://' schema",
+            description = "Specify a @|bold,underline url|@ of Central System with @|fg(red) 'ws://'|@ schema",
             required = true)
     public void setCentralSystemUrl(String csUrlParameter) {
         boolean invalid = !csUrlParameter.contains("ws://");
@@ -41,7 +41,7 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
     }
 
     @Option(names = {"--stationCount", "-S"},
-            description = "Specify a count of Charge Points for emulation, value should be integer and greater than zero",
+            description = "@|fg(red)Specify a count of Charge Points for emulation, value should be integer and greater than zero|@",
             required = true)
     public void setStationCount (int stationCountParameter) {
         boolean invalid = stationCountParameter <= 0;
