@@ -39,7 +39,7 @@ public class ChargePointEmulatorAsyncDecoratorFactory implements ChargePointEmul
             scheduledExecutorService,
             chargePointModel,
             chargePointVendor,
-            new JettyWebSocket(objectMapper, webSocketClient)
+            new JettyWebsocketClient(objectMapper, webSocketClient)
         );
     }
 }

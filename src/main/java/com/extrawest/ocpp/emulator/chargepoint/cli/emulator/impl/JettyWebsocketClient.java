@@ -36,7 +36,7 @@ import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil
 @WebSocket
 @RequiredArgsConstructor
 @Slf4j
-public class JettyWebSocket implements AsyncCentralSystemClient { // TODO: rename
+public class JettyWebsocketClient implements AsyncCentralSystemClient {
 
     private static final int REQUEST_ID_INDEX = 1;
 
