@@ -2,7 +2,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.picocli;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.constant.PicocliConstants;
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationParameters;
-import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.CentralSystemUnavailableException;
+import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationConnectionException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +56,7 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
     public Integer call() throws EmulationException {
         try {
             chargePointEmulatorsService.startEmulation(new ChargePointsEmulationParameters(csUrl, stationCount));
-        } catch (CentralSystemUnavailableException e) {
+        } catch (EmulationConnectionException e) {
             log.warn("Central system unavailable, please check that Central System is alive");
             return PicocliConstants.ERROR_CENTRAL_SYSTEM_UNAVAILABLE;
         }
