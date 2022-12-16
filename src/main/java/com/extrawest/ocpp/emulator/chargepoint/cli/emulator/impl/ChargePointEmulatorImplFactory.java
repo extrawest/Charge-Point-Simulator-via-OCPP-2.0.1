@@ -14,7 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 @Component
 @RequiredArgsConstructor
-public class ChargePointEmulatorAsyncDecoratorFactory implements ChargePointEmulatorFactory { // TODO: rename
+public class ChargePointEmulatorImplFactory implements ChargePointEmulatorFactory {
 
     private final ScheduledExecutorService scheduledExecutorService;
 
