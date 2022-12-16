@@ -1,9 +1,8 @@
-package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.factory.impl;
+package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.factory.ChargePointEmulatorFactory;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.WebSocketChargePointEmulator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulatorFactory;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

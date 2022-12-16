@@ -2,7 +2,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.service.impl;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.factory.ChargePointEmulatorFactory;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulatorFactory;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.ChargePointEmulatorsGroup;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
