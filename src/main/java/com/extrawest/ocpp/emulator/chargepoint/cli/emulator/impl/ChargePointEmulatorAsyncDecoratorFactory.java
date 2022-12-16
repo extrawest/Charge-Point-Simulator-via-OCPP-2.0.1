@@ -14,7 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 @Component
 @RequiredArgsConstructor
-public class ChargePointEmulatorAsyncDecoratorFactory implements ChargePointEmulatorFactory {
+public class ChargePointEmulatorAsyncDecoratorFactory implements ChargePointEmulatorFactory { // TODO: rename
 
     private final ScheduledExecutorService scheduledExecutorService;
 
@@ -39,8 +39,7 @@ public class ChargePointEmulatorAsyncDecoratorFactory implements ChargePointEmul
             scheduledExecutorService,
             chargePointModel,
             chargePointVendor,
-            objectMapper,
-            webSocketClient
+            new JettyWebSocket(objectMapper, webSocketClient)
         );
     }
 }
