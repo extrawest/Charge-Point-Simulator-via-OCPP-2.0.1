@@ -32,7 +32,7 @@ public class ChargePointEmulatorAsyncDecoratorFactory implements ChargePointEmul
 
     @Override
     public ChargePointEmulator createChargePointEmulator(CreateChargePointParameters createChargePointParameters) {
-        return new WebSocketChargePointEmulator(
+        return new ChargePointEmulatorImpl(
             callFactory,
             createChargePointParameters.getCentralSystemUrl(),
             createChargePointParameters.getChargePointId(),

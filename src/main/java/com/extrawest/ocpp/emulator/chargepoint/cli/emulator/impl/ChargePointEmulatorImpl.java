@@ -15,7 +15,7 @@ import java.util.concurrent.*;
 import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.unchecked;
 
 @Slf4j
-public class WebSocketChargePointEmulator implements ChargePointEmulator { // TODO: rename
+public class ChargePointEmulatorImpl implements ChargePointEmulator {
 
     private final CallFactory callFactory;
 
@@ -33,7 +33,7 @@ public class WebSocketChargePointEmulator implements ChargePointEmulator { // TO
 
     private ScheduledFuture<?> heartbeatScheduledFuture;
 
-    public WebSocketChargePointEmulator(
+    public ChargePointEmulatorImpl(
         CallFactory callFactory,
         String centralSystemUrl,
         String chargePointId,
