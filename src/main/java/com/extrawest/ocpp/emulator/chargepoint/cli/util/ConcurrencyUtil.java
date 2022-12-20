@@ -25,11 +25,4 @@ public class ConcurrencyUtil {
             semaphore.release();
         }
     }
-
-    public static void acquireRunRelease(Semaphore semaphore, Runnable runnable) {
-        acquireGetRelease(semaphore, () -> {
-            runnable.run();
-            return (Void) null;
-        });
-    }
 }
