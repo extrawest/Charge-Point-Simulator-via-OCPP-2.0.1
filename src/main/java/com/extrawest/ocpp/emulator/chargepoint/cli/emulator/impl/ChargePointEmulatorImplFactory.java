@@ -1,44 +1,29 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulatorFactory;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.ScheduledExecutorService;
 
 @Component
 @RequiredArgsConstructor
-public class ChargePointEmulatorImplFactory implements ChargePointEmulatorFactory {
-
-    private final ScheduledExecutorService scheduledExecutorService;
-
-    @Value("${ocpp.charge-point.boot-notification.chargePointModel}")
-    private final String chargePointModel;
-
-    @Value("${ocpp.charge-point.boot-notification.chargePointVendor}")
-    private final String chargePointVendor;
+public class ChargePointEmulatorImplFactory implements ChargePointEmulatorFactory { // TODO: rename to ChargePointEmulatorFactoryImpl
 
     private final ObjectMapper objectMapper;
 
     private final WebSocketClient webSocketClient;
 
-    private final CallFactory callFactory;
-
     @Override
-    public ChargePointEmulatorImpl createChargePointEmulator(CreateChargePointParameters createChargePointParameters) {
-        return new ChargePointEmulatorImpl(
-            callFactory,
-            createChargePointParameters.getCentralSystemUrl(),
+    public ChargePointEmulator createChargePointEmulator(CreateChargePointParameters createChargePointParameters) {
+        return new ChargePointEmulator(
+            new JettyWebsocketClient(objectMapper, webSocketClient),
+            createChargePointParameters.getChargePointModel(),
+            createChargePointParameters.getChargePointVendor(),
             createChargePointParameters.getChargePointId(),
-            scheduledExecutorService,
-            chargePointModel,
-            chargePointVendor,
-            new JettyWebsocketClient(objectMapper, webSocketClient)
+            createChargePointParameters.getCentralSystemUrl()
         );
     }
 }
