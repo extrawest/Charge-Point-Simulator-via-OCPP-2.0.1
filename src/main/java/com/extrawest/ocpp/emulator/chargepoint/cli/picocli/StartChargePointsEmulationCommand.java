@@ -22,6 +22,7 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
     CommandLine.Model.CommandSpec spec;
     private String csUrl;
     private int stationCount;
+    private int connectionCountForLogs;
     private final ChargePointEmulatorsService chargePointEmulatorsService;
 
     public StartChargePointsEmulationCommand(@Autowired ChargePointEmulatorsService chargePointEmulatorsService) {
@@ -47,15 +48,27 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
         boolean invalid = stationCountParameter <= 0;
         if (invalid) {
                 throw new CommandLine.ParameterException(spec.commandLine(),
-                        String.format("Invalid value '%s' for option '--stationCount': ", stationCountParameter));
+                        String.format("Invalid value '%s' for option '--stationCount'", stationCountParameter));
         }
         stationCount = stationCountParameter;
+    }
+
+    @Option(names = {"--logsRange", "-L"}, description = "@|fg(red)Specify a range step for logging|@")
+    public void setConnectionCountForLogs(int connectionCountForLogsParameter) {
+        boolean invalid = connectionCountForLogsParameter <= 0;
+        if (invalid) {
+            throw new CommandLine.ParameterException(spec.commandLine(),
+                    String.format("Invalid value '%s' for option '--logsRange'", connectionCountForLogsParameter));
+        }
+        connectionCountForLogs = connectionCountForLogsParameter;
     }
 
     @Override
     public Integer call() throws EmulationException {
         try {
-            chargePointEmulatorsService.startEmulation(new ChargePointsEmulationParameters(csUrl, stationCount));
+            chargePointEmulatorsService.startEmulation(new ChargePointsEmulationParameters(
+                    csUrl, stationCount, connectionCountForLogs)
+            );
         } catch (CentralSystemUnavailableException e) {
             log.warn("Central system unavailable, please check that Central System is alive");
             return PicocliConstants.ERROR_CENTRAL_SYSTEM_UNAVAILABLE;
