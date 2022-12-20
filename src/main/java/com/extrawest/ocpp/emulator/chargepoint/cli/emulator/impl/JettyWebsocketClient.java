@@ -121,13 +121,11 @@ public class JettyWebsocketClient implements AsyncCentralSystemClient {
             log.error(e.getMessage(), e);
             return;
         }
-
+        if (!requestIdsToResults.containsKey(requestId)) {
+            return;
+        }
         try {
-            if (!requestIdsToResults.containsKey(requestId)) {
-                return;
-            }
             parseRawMessageToResultAndCompleteFuture(requestIdsToResults.get(requestId), rawMessage);
-            // todo: cleanup results
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
