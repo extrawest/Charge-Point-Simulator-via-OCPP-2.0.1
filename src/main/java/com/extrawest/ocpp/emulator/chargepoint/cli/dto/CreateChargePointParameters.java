@@ -10,4 +10,8 @@ public class CreateChargePointParameters {
     private final String centralSystemUrl;
 
     private final String chargePointId;
+
+    private final String chargePointModel;
+
+    private final String chargePointVendor;
 }
