@@ -1,10 +1,23 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-public interface ChargePointEmulator {
+@Getter
+@Setter
+@RequiredArgsConstructor
+public class ChargePointEmulator {
 
-    void start() throws EmulationException;
+    private final CentralSystemClient centralSystemClient;
 
-    void stop();
+    private final String chargePointModel;
+
+    private final String chargePointVendor;
+
+    private final String chargePointId;
+
+    private final String centralSystemUrl;
+
+    private Integer heartbeatInterval;
 }
