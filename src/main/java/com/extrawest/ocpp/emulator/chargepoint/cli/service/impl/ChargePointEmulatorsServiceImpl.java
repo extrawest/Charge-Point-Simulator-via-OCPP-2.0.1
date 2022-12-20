@@ -3,8 +3,11 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.service.impl;
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulatorFactory;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl.ChargePointEmulatorsGroup;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.SendBootNotificationAction;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.CentralSystemConnectAction;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.StartHeartbeatingAction;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallFactory;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import java.util.stream.Collectors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.LongStream;
 
 @Service
@@ -26,6 +29,16 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
 
     @Value("${ocpp.charge-point.id-index-prefix:CP}")
     private final String chargePointIdIndexPrefix;
+
+    @Value("${ocpp.charge-point.boot-notification.chargePointModel}")
+    private final String chargePointModel;
+
+    @Value("${ocpp.charge-point.boot-notification.chargePointVendor}")
+    private final String chargePointVendor;
+
+    private final CallFactory callFactory;
+
+    private final ScheduledExecutorService scheduledExecutorService;
 
     @Override
     public void startEmulation(@Valid ChargePointsEmulationParameters parameters) throws EmulationException {
@@ -42,15 +55,22 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
         }
     }
 
-    private void createAndStartEmulators(ChargePointsEmulationParameters parameters) throws EmulationException {
-        var chargePointEmulationGroup = LongStream.range(0, parameters.getChargePointsCount())
+    private void createAndStartEmulators(ChargePointsEmulationParameters parameters) {
+        var connectAction = new CentralSystemConnectAction();
+        var sendBootNotificationAction = new SendBootNotificationAction(callFactory);
+        var startHeartbeatingAction = new StartHeartbeatingAction(callFactory, scheduledExecutorService);
+
+        LongStream.range(0, parameters.getChargePointsCount())
             .parallel()
-            .mapToObj(
-                i -> new CreateChargePointParameters(parameters.getCentralSystemUrl(), createChargePointIdForIndex(i))
-            )
+            .mapToObj(i -> new CreateChargePointParameters(
+                parameters.getCentralSystemUrl(), createChargePointIdForIndex(i), chargePointModel, chargePointVendor
+            ))
             .map(chargePointEmulatorFactory::createChargePointEmulator)
-            .collect(Collectors.collectingAndThen(Collectors.toList(), ChargePointEmulatorsGroup::new));
-        chargePointEmulationGroup.start();
+            .forEach(chargePointEmulator -> connectAction
+                .andThen(sendBootNotificationAction)
+                .andThen(startHeartbeatingAction)
+                .accept(chargePointEmulator)
+            );
     }
 
     private String createChargePointIdForIndex(long chargePointIndex) {
