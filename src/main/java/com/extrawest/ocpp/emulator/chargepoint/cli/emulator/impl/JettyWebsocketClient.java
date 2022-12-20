@@ -4,7 +4,6 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.AsyncCentralSystemCl
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationConnectionException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.Call;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
-import com.extrawest.ocpp.emulator.chargepoint.cli.util.ConcurrencyUtil;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,10 +25,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.function.Consumer;
 
 import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.unchecked;
 
@@ -42,8 +37,6 @@ public class JettyWebsocketClient implements AsyncCentralSystemClient {
 
     private final Map<String, TypedCallResultFutureContainer<?>> requestIdsToResults = new ConcurrentHashMap<>();
 
-    private final ReadWriteLock callsToResultsReadWriteLock = new ReentrantReadWriteLock(true);
-
     private final ObjectMapper objectMapper;
 
     private final WebSocketClient webSocketClient;
@@ -51,8 +44,6 @@ public class JettyWebsocketClient implements AsyncCentralSystemClient {
     @Getter(AccessLevel.PRIVATE)
     @Setter(AccessLevel.PRIVATE)
     private Session session;
-
-    private final Semaphore wsSessionSemaphore = new Semaphore(1);
 
     @Override
     public void connect(URI centralSystemUri) throws EmulationConnectionException {
@@ -80,24 +71,21 @@ public class JettyWebsocketClient implements AsyncCentralSystemClient {
 
     @Override
     public void disconnect() {
-        ConcurrencyUtil.acquireRunRelease(wsSessionSemaphore, () -> {
-            Optional.ofNullable(getSession()).ifPresent(currentSession -> {
-                if (currentSession.isOpen()) {
-                    currentSession.close();
-                }
-                currentSession.disconnect();
-            });
-            setSession(null);
+        Optional.ofNullable(getSession()).ifPresent(currentSession -> {
+            if (currentSession.isOpen()) {
+                currentSession.close();
+            }
+            currentSession.disconnect();
         });
+        setSession(null);
     }
 
     @Override
     public <T, U> CompletableFuture<CallResult<U>> sendCallAsync(Call<T> call, Class<U> expectedCallResultClass) {
         CompletableFuture<CallResult<U>> futureResult = new CompletableFuture<>();
-        doInWriteLock(results -> results.put(
-            call.getUniqueId(),
-            new TypedCallResultFutureContainer<>(futureResult, expectedCallResultClass)
-        ));
+        requestIdsToResults.put(
+            call.getUniqueId(), new TypedCallResultFutureContainer<>(futureResult, expectedCallResultClass)
+        );
         trySendStringToSession(tryWriteValueAsString(call), session);
         return futureResult;
     }
@@ -116,12 +104,12 @@ public class JettyWebsocketClient implements AsyncCentralSystemClient {
 
     @OnWebSocketConnect
     public void onWebSocketConnect(Session session) {
-        setSessionThreadSafe(session);
+        setSession(session);
     }
 
     @OnWebSocketClose
     public void onWebSocketClose(int statusCode, String reason) {
-        setSessionThreadSafe(null);
+        setSession(null);
     }
 
     @OnWebSocketMessage
@@ -135,12 +123,11 @@ public class JettyWebsocketClient implements AsyncCentralSystemClient {
         }
 
         try {
-            doInReadLock(results -> {
-                if (!results.containsKey(requestId)) {
-                    return;
-                }
-                parseRawMessageToResultAndCompleteFuture(results.get(requestId), rawMessage);
-            });
+            if (!requestIdsToResults.containsKey(requestId)) {
+                return;
+            }
+            parseRawMessageToResultAndCompleteFuture(requestIdsToResults.get(requestId), rawMessage);
+            // todo: cleanup results
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
@@ -155,27 +142,7 @@ public class JettyWebsocketClient implements AsyncCentralSystemClient {
     }
 
     private void removeResultForId(String requestUniqueId) {
-        doInWriteLock(results -> results.remove(requestUniqueId));
-    }
-
-    private void doInWriteLock(Consumer<Map<String, TypedCallResultFutureContainer<?>>> resultsAccessor) {
-        var lock = callsToResultsReadWriteLock.writeLock();
-        lock.lock();
-        try {
-            resultsAccessor.accept(requestIdsToResults);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    private void doInReadLock(Consumer<Map<String, TypedCallResultFutureContainer<?>>> resultsAccessor) {
-        var lock = callsToResultsReadWriteLock.readLock();
-        lock.lock();
-        try {
-            resultsAccessor.accept(requestIdsToResults);
-        } finally {
-            lock.unlock();
-        }
+        requestIdsToResults.remove(requestUniqueId);
     }
 
     private void trySendStringToSession(String string, Session wsSession) {
@@ -218,10 +185,6 @@ public class JettyWebsocketClient implements AsyncCentralSystemClient {
     private String getRequestIdFromRawMessage(String rawMessage)
         throws JsonProcessingException, IndexOutOfBoundsException {
         return String.valueOf(objectMapper.readValue(rawMessage, Object[].class)[REQUEST_ID_INDEX]);
-    }
-
-    private void setSessionThreadSafe(Session session) {
-        ConcurrencyUtil.acquireRunRelease(wsSessionSemaphore, () -> setSession(session));
     }
 
     @RequiredArgsConstructor
