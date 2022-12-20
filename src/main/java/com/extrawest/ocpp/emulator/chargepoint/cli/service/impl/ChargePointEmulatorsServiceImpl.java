@@ -29,6 +29,7 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
 
     @Override
     public void startEmulation(@Valid ChargePointsEmulationParameters parameters) throws EmulationException {
+        log.info("Trying to start emulation");
         tryCreateAndStartEmulatorsOrThrow(parameters);
     }
 
@@ -46,11 +47,15 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
         var chargePointEmulationGroup = LongStream.range(0, parameters.getChargePointsCount())
             .parallel()
             .mapToObj(
-                i -> new CreateChargePointParameters(parameters.getCentralSystemUrl(), createChargePointIdForIndex(i))
+                i -> new CreateChargePointParameters(
+                        parameters.getCentralSystemUrl(), createChargePointIdForIndex(i)
+                )
             )
             .map(chargePointEmulatorFactory::createChargePointEmulator)
             .collect(Collectors.collectingAndThen(Collectors.toList(), ChargePointEmulatorsGroup::new));
+        chargePointEmulationGroup.setLogsCount(parameters.getLogsRange());
         chargePointEmulationGroup.start();
+        log.info(parameters.getChargePointsCount() + " charge points emulators was created");
     }
 
     private String createChargePointIdForIndex(long chargePointIndex) {
