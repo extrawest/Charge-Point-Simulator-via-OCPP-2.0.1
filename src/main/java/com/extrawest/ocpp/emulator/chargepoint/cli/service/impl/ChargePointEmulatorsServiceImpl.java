@@ -44,9 +44,6 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
 
     private final ScheduledExecutorService scheduledExecutorService;
 
-    @Value("${ocpp.charge-point.logs-count:200}")
-    private int logsCount;
-
     @Override
     public void startEmulation(@Valid ChargePointsEmulationParameters parameters) throws EmulationException {
         log.info("Trying to start the emulation");
@@ -64,7 +61,9 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
     }
 
     private void createAndStartEmulators(ChargePointsEmulationParameters parameters) {
-        Optional.of(parameters).map(this::createChargePointEmulators).ifPresent(this::startChargePointEmulators);
+        Optional.of(parameters)
+            .map(this::createChargePointEmulators)
+            .ifPresent(chargePointEmulators -> startChargePointEmulators(chargePointEmulators, parameters));
     }
 
     private List<ChargePointEmulator> createChargePointEmulators(ChargePointsEmulationParameters parameters) {
@@ -77,10 +76,13 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
             .toList();
     }
 
-    private void startChargePointEmulators(List<ChargePointEmulator> chargePointEmulators) {
+    private void startChargePointEmulators(
+        List<ChargePointEmulator> chargePointEmulators, ChargePointsEmulationParameters parameters
+    ) {
         var connectAction = new CentralSystemConnectAction();
         var sendBootNotificationAction = new SendBootNotificationAction(callFactory);
         var startHeartbeatingAction = new StartHeartbeatingAction(callFactory, scheduledExecutorService);
+        int connectionCountForLogs = parameters.getConnectionCountForLogs();
 
         log.info("Starting " + chargePointEmulators.size() + " emulators");
 
@@ -89,7 +91,7 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
             var index = chargePointsIterator.nextIndex();
             var chargePointEmulator = chargePointsIterator.next();
             Consumer<ChargePointEmulator> startAction = connectAction;
-            if (indexNeedsBeLogged(index)) {
+            if (indexNeedsBeLogged(index, connectionCountForLogs)) {
                 startAction = startAction.andThen(
                     emulator -> log.info("Currently running " + (index + 1) + " charge points emulators")
                 );
@@ -100,9 +102,9 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
         log.info(chargePointEmulators.size() + " charge points emulators were created");
     }
 
-    private boolean indexNeedsBeLogged(int index) {
+    private boolean indexNeedsBeLogged(int index, int logEachNth) {
         var startFromOneIndex = index + 1;
-        return (startFromOneIndex >= logsCount) && (startFromOneIndex % logsCount == 0);
+        return (startFromOneIndex >= logEachNth) && (startFromOneIndex % logEachNth == 0);
     }
 
     private String createChargePointIdForIndex(long chargePointIndex) {
