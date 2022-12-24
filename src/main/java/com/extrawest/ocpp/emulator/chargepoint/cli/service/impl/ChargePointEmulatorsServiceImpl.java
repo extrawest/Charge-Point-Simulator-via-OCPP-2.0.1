@@ -49,6 +49,7 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
 
     @Override
     public void startEmulation(@Valid ChargePointsEmulationParameters parameters) throws EmulationException {
+        log.info("Trying to start the emulation");
         tryCreateAndStartEmulatorsOrThrow(parameters);
     }
 
@@ -96,6 +97,7 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
             startAction = startAction.andThen(sendBootNotificationAction).andThen(startHeartbeatingAction);
             startAction.accept(chargePointEmulator);
         }
+        log.info(chargePointEmulators.size() + " charge points emulators were created");
     }
 
     private boolean indexNeedsBeLogged(int index) {
