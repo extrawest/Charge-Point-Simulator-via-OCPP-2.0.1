@@ -2,6 +2,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.service.impl;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulatorFactory;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.SendBootNotificationAction;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.CentralSystemConnectAction;
@@ -16,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Consumer;
 import java.util.stream.LongStream;
 
 @Service
@@ -40,6 +44,9 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
 
     private final ScheduledExecutorService scheduledExecutorService;
 
+    @Value("${ocpp.charge-point.logs-count:200}")
+    private int logsCount;
+
     @Override
     public void startEmulation(@Valid ChargePointsEmulationParameters parameters) throws EmulationException {
         tryCreateAndStartEmulatorsOrThrow(parameters);
@@ -56,21 +63,44 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
     }
 
     private void createAndStartEmulators(ChargePointsEmulationParameters parameters) {
-        var connectAction = new CentralSystemConnectAction();
-        var sendBootNotificationAction = new SendBootNotificationAction(callFactory);
-        var startHeartbeatingAction = new StartHeartbeatingAction(callFactory, scheduledExecutorService);
+        Optional.of(parameters).map(this::createChargePointEmulators).ifPresent(this::startChargePointEmulators);
+    }
 
-        LongStream.range(0, parameters.getChargePointsCount())
+    private List<ChargePointEmulator> createChargePointEmulators(ChargePointsEmulationParameters parameters) {
+        return LongStream.range(0, parameters.getChargePointsCount())
             .parallel()
             .mapToObj(i -> new CreateChargePointParameters(
                 parameters.getCentralSystemUrl(), createChargePointIdForIndex(i), chargePointModel, chargePointVendor
             ))
             .map(chargePointEmulatorFactory::createChargePointEmulator)
-            .forEach(chargePointEmulator -> connectAction
-                .andThen(sendBootNotificationAction)
-                .andThen(startHeartbeatingAction)
-                .accept(chargePointEmulator)
-            );
+            .toList();
+    }
+
+    private void startChargePointEmulators(List<ChargePointEmulator> chargePointEmulators) {
+        var connectAction = new CentralSystemConnectAction();
+        var sendBootNotificationAction = new SendBootNotificationAction(callFactory);
+        var startHeartbeatingAction = new StartHeartbeatingAction(callFactory, scheduledExecutorService);
+
+        log.info("Starting " + chargePointEmulators.size() + " emulators");
+
+        var chargePointsIterator = chargePointEmulators.listIterator();
+        while (chargePointsIterator.hasNext()) {
+            var index = chargePointsIterator.nextIndex();
+            var chargePointEmulator = chargePointsIterator.next();
+            Consumer<ChargePointEmulator> startAction = connectAction;
+            if (indexNeedsBeLogged(index)) {
+                startAction = startAction.andThen(
+                    emulator -> log.info("Currently running " + (index + 1) + " charge points emulators")
+                );
+            }
+            startAction = startAction.andThen(sendBootNotificationAction).andThen(startHeartbeatingAction);
+            startAction.accept(chargePointEmulator);
+        }
+    }
+
+    private boolean indexNeedsBeLogged(int index) {
+        var startFromOneIndex = index + 1;
+        return (startFromOneIndex >= logsCount) && (startFromOneIndex % logsCount == 0);
     }
 
     private String createChargePointIdForIndex(long chargePointIndex) {

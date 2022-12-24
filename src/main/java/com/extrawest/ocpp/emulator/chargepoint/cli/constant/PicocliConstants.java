@@ -8,5 +8,4 @@ public class PicocliConstants {
 
     public static final int SUCCESS = 0;
     public static final int ERROR_CENTRAL_SYSTEM_UNAVAILABLE = 1;
-    public static final int DEFAULT_LOGS_RANGE = 200;
 }

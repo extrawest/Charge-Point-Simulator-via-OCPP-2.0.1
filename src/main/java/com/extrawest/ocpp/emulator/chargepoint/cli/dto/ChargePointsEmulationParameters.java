@@ -15,5 +15,4 @@ public class ChargePointsEmulationParameters {
 
     @Min(1)
     private final int chargePointsCount;
-    private final int logsRange;
 }
