@@ -1,6 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator;
 
-public class EmulationConnectionException extends EmulationException {
+public class EmulationConnectionException extends EmulationIOException {
 
     public EmulationConnectionException() {
     }
