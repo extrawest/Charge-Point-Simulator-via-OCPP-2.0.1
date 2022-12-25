@@ -1,6 +1,7 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationConnectionException;
+import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationIOException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.Call;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
 
@@ -12,5 +13,5 @@ public interface CentralSystemClient {
 
     void disconnect();
 
-    <T, U> CallResult<U> sendCall(Call<T> call, Class<U> expectedCallResultClass);
+    <T, U> CallResult<U> sendCall(Call<T> call, Class<U> expectedCallResultClass) throws EmulationIOException;
 }
