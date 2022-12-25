@@ -6,6 +6,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootNotificationConfirm
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootNotificationRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -13,6 +14,7 @@ import java.util.function.Consumer;
 import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.emptyOptionalException;
 
 @RequiredArgsConstructor
+@Component
 public class SendBootNotificationAction implements Consumer<ChargePointEmulator> {
 
     private final CallsSender callsSender;
