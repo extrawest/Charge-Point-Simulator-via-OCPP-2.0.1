@@ -16,7 +16,7 @@ public class Call<T> {
 
     private final MessageType messageTypeId = MessageType.CALL;
 
-    private final String uniqueId; // TODO: rethink if a class-wrapper is required
+    private final String uniqueId;
 
     private final CallAction action;
 
