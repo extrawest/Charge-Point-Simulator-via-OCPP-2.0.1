@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootNotificationConfirmation;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootNotificationRequest;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallFactory;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
 import lombok.RequiredArgsConstructor;
 
@@ -15,20 +15,25 @@ import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil
 @RequiredArgsConstructor
 public class SendBootNotificationAction implements Consumer<ChargePointEmulator> {
 
-    private final CallFactory callFactory;
+    private final CallsSender callsSender;
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
-        var centralSystemClient = chargePointEmulator.getCentralSystemClient();
-        var bootNotificationCall = callFactory.createCallFor(new BootNotificationRequest(
-            chargePointEmulator.getChargePointModel(), chargePointEmulator.getChargePointVendor()
-        ));
-        Optional.of(centralSystemClient.sendCall(bootNotificationCall, BootNotificationConfirmation.class))
+        Optional.of(createBootNotificationRequestFor(chargePointEmulator))
+            .map(bootNotificationRequest -> callsSender.sendCall(
+                chargePointEmulator.getCentralSystemClient(), bootNotificationRequest
+            ))
             .map(CallResult::getPayload)
             .map(BootNotificationConfirmation::getInterval)
             .ifPresentOrElse(
                 chargePointEmulator::setHeartbeatInterval,
                 () -> {throw emptyOptionalException();}
             );
+    }
+
+    private BootNotificationRequest createBootNotificationRequestFor(ChargePointEmulator chargePointEmulator) {
+        return new BootNotificationRequest(
+            chargePointEmulator.getChargePointModel(), chargePointEmulator.getChargePointVendor()
+        );
     }
 }
