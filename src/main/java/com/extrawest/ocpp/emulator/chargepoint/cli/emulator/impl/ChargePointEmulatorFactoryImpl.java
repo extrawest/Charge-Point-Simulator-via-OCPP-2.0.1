@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ChargePointEmulatorImplFactory implements ChargePointEmulatorFactory { // TODO: rename to ChargePointEmulatorFactoryImpl
+public class ChargePointEmulatorFactoryImpl implements ChargePointEmulatorFactory {
 
     private final ObjectMapper objectMapper;
 
