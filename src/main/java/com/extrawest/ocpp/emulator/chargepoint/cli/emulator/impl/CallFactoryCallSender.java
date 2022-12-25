@@ -2,6 +2,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CentralSystemClient;
+import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationIOException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootNotificationConfirmation;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootNotificationRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.HeartbeatConfirmation;
@@ -20,12 +21,14 @@ public class CallFactoryCallSender implements CallsSender {
     @Override
     public CallResult<BootNotificationConfirmation> sendCall(
         CentralSystemClient client, BootNotificationRequest request
-    ) {
+    ) throws EmulationIOException {
         return client.sendCall(callFactory.createCallFor(request), BootNotificationConfirmation.class);
     }
 
     @Override
-    public CallResult<HeartbeatConfirmation> sendCall(CentralSystemClient client, HeartbeatRequest request) {
+    public CallResult<HeartbeatConfirmation> sendCall(
+        CentralSystemClient client, HeartbeatRequest request
+    ) throws EmulationIOException {
         return client.sendCall(callFactory.createCallFor(request), HeartbeatConfirmation.class);
     }
 }
