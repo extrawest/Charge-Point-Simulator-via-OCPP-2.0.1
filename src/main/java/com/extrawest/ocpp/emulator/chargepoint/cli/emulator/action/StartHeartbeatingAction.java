@@ -5,6 +5,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.HeartbeatRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,6 +16,7 @@ import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil
 
 @RequiredArgsConstructor
 @Slf4j
+@Component
 public class StartHeartbeatingAction implements Consumer<ChargePointEmulator> {
 
     private static final HeartbeatRequest HEARTBEAT_REQUEST = new HeartbeatRequest();
