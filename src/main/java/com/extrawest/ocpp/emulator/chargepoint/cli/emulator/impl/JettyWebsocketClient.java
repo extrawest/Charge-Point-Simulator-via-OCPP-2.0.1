@@ -1,6 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.AsyncCentralSystemClient;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CentralSystemClient;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationConnectionException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.Call;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
@@ -31,7 +31,7 @@ import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil
 @WebSocket
 @RequiredArgsConstructor
 @Slf4j
-public class JettyWebsocketClient implements AsyncCentralSystemClient {
+public class JettyWebsocketClient implements CentralSystemClient {
 
     private static final int REQUEST_ID_INDEX = 1;
 
@@ -60,16 +60,6 @@ public class JettyWebsocketClient implements AsyncCentralSystemClient {
     }
 
     @Override
-    public CompletableFuture<Session> connectAsync(URI centralSystemUri) {
-        try {
-            return webSocketClient.connect(this, centralSystemUri);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            return CompletableFuture.failedFuture(e);
-        }
-    }
-
-    @Override
     public void disconnect() {
         Optional.ofNullable(getSession()).ifPresent(currentSession -> {
             if (currentSession.isOpen()) {
@@ -78,16 +68,6 @@ public class JettyWebsocketClient implements AsyncCentralSystemClient {
             currentSession.disconnect();
         });
         setSession(null);
-    }
-
-    @Override
-    public <T, U> CompletableFuture<CallResult<U>> sendCallAsync(Call<T> call, Class<U> expectedCallResultClass) {
-        CompletableFuture<CallResult<U>> futureResult = new CompletableFuture<>();
-        requestIdsToResults.put(
-            call.getUniqueId(), new TypedCallResultFutureContainer<>(futureResult, expectedCallResultClass)
-        );
-        trySendStringToSession(tryWriteValueAsString(call), session);
-        return futureResult;
     }
 
     @Override
@@ -131,6 +111,24 @@ public class JettyWebsocketClient implements AsyncCentralSystemClient {
         } finally {
             removeResultForId(requestId);
         }
+    }
+
+    private CompletableFuture<Session> connectAsync(URI centralSystemUri) {
+        try {
+            return webSocketClient.connect(this, centralSystemUri);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            return CompletableFuture.failedFuture(e);
+        }
+    }
+
+    private <T, U> CompletableFuture<CallResult<U>> sendCallAsync(Call<T> call, Class<U> expectedCallResultClass) {
+        CompletableFuture<CallResult<U>> futureResult = new CompletableFuture<>();
+        requestIdsToResults.put(
+            call.getUniqueId(), new TypedCallResultFutureContainer<>(futureResult, expectedCallResultClass)
+        );
+        trySendStringToSession(tryWriteValueAsString(call), session);
+        return futureResult;
     }
 
     private <T> void parseRawMessageToResultAndCompleteFuture(
