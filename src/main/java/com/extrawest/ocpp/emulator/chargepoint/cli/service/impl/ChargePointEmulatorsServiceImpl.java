@@ -8,7 +8,6 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.SendBootNotif
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.CentralSystemConnectAction;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.StartHeartbeatingAction;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallFactory;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.LongStream;
 
@@ -40,9 +38,11 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
     @Value("${ocpp.charge-point.boot-notification.chargePointVendor}")
     private final String chargePointVendor;
 
-    private final CallFactory callFactory;
+    private final CentralSystemConnectAction connectAction;
 
-    private final ScheduledExecutorService scheduledExecutorService;
+    private final SendBootNotificationAction sendBootNotificationAction;
+
+    private final StartHeartbeatingAction startHeartbeatingAction;
 
     @Override
     public void startEmulation(@Valid ChargePointsEmulationParameters parameters) throws EmulationException {
@@ -79,9 +79,6 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
     private void startChargePointEmulators(
         List<ChargePointEmulator> chargePointEmulators, ChargePointsEmulationParameters parameters
     ) {
-        var connectAction = new CentralSystemConnectAction();
-        var sendBootNotificationAction = new SendBootNotificationAction(callFactory);
-        var startHeartbeatingAction = new StartHeartbeatingAction(callFactory, scheduledExecutorService);
         int connectionCountForLogs = parameters.getConnectionCountForLogs();
 
         log.info("Starting " + chargePointEmulators.size() + " emulators");
