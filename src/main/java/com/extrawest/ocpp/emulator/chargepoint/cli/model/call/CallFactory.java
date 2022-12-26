@@ -1,8 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model.call;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.AuthorizeRequest;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootNotificationRequest;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.HeartbeatRequest;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.*;
 
 public interface CallFactory {
 
@@ -11,4 +9,6 @@ public interface CallFactory {
     Call<HeartbeatRequest> createCallFor(HeartbeatRequest heartbeatRequest);
 
     Call<AuthorizeRequest> createCallFor(AuthorizeRequest authorizeRequest);
+
+    Call<StartTransactionRequest> createCallFor(StartTransactionRequest startTransactionRequest);
 }
