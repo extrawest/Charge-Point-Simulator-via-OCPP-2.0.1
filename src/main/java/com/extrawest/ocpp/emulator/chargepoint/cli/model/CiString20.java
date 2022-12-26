@@ -25,7 +25,7 @@ public class CiString20 {
     }
 
     private void ensureValueValidOrThrow(String value) {
-        if (value != null && value.length() >= VALUE_MAX_LENGTH) {
+        if (value != null && value.length() > VALUE_MAX_LENGTH) {
             throw unchecked("Max length of the value must be less then or equal to " + VALUE_MAX_LENGTH);
         }
     }
