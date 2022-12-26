@@ -11,6 +11,10 @@ public class ThrowReadablyUtil {
         return new UncheckedApplicationException(cause);
     }
 
+    public static UncheckedApplicationException unchecked(String message) {
+        return new UncheckedApplicationException(message);
+    }
+
     public static UncheckedApplicationException emptyOptionalException() {
         return new UncheckedApplicationException("The Optional was expected to be non-empty");
     }
