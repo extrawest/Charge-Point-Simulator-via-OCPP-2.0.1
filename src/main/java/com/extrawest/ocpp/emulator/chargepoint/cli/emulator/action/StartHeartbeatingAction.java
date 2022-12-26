@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -28,9 +27,10 @@ public class StartHeartbeatingAction implements Consumer<ChargePointEmulator> {
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
-        var heartbeatInterval = Optional.of(chargePointEmulator.getHeartbeatInterval()).orElseThrow(
-            () -> unchecked(new IllegalStateException("The emulator does not have heartbeat interval set"))
-        );
+        var heartbeatInterval = chargePointEmulator.getHeartbeatInterval();
+        if (heartbeatInterval == null) {
+            throw unchecked(new IllegalStateException("The emulator does not have heartbeat interval set"));
+        }
         scheduledExecutorService.scheduleWithFixedDelay(
             (ThrowingRunnable)
                 () -> callsSender.sendCall(chargePointEmulator.getCentralSystemClient(), HEARTBEAT_REQUEST),
