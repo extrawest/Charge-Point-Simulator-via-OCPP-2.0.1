@@ -25,4 +25,8 @@ public class ChargePointEmulator {
     private Integer heartbeatInterval;
 
     private IdTagInfo authorizeIdTagInfo;
+
+    private int currentMeterValue;
+
+    private int currentTransactionId;
 }
