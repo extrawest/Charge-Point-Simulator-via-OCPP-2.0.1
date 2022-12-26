@@ -1,5 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model.call.impl;
 
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.AuthorizeRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootNotificationRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.HeartbeatRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.Call;
@@ -20,6 +21,11 @@ public class CallFactoryImpl implements CallFactory {
     @Override
     public Call<HeartbeatRequest> createCallFor(HeartbeatRequest heartbeatRequest) {
         return new Call<>(generateUniqueId(), CallAction.Heartbeat, heartbeatRequest);
+    }
+
+    @Override
+    public Call<AuthorizeRequest> createCallFor(AuthorizeRequest authorizeRequest) {
+        return new Call<>(generateUniqueId(), CallAction.Authorize, authorizeRequest);
     }
 
     private String generateUniqueId() {
