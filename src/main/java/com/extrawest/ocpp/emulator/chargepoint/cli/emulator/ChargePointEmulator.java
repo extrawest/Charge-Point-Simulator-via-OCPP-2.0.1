@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.Duration;
+
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -22,11 +24,13 @@ public class ChargePointEmulator {
 
     private final String centralSystemUrl;
 
-    private Integer heartbeatInterval;
+    private Integer heartbeatInterval; // TODO: refactor to use Duration instead
 
     private IdTagInfo authorizeIdTagInfo;
 
     private int currentMeterValue;
 
-    private int currentTransactionId;
+    private Integer currentTransactionId;
+
+    private Duration sendMeterValuesInterval;
 }
