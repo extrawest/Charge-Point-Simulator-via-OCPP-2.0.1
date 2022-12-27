@@ -1,6 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CentralSystemClient;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationIOException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallFactory;
@@ -14,12 +14,12 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
-public class CallFactoryCallSender implements CallsSender {
+public class CallFactoryCallSender implements RequestSender {
 
     private final CallFactory callFactory;
 
     @Override
-    public BootNotificationConfirmation sendCall(
+    public BootNotificationConfirmation sendRequest(
         CentralSystemClient client, BootNotificationRequest request
     ) throws EmulationIOException {
         return extractPayload(
@@ -28,7 +28,7 @@ public class CallFactoryCallSender implements CallsSender {
     }
 
     @Override
-    public HeartbeatConfirmation sendCall(
+    public HeartbeatConfirmation sendRequest(
         CentralSystemClient client, HeartbeatRequest request
     ) throws EmulationIOException {
         return extractPayload(
@@ -37,7 +37,7 @@ public class CallFactoryCallSender implements CallsSender {
     }
 
     @Override
-    public AuthorizeConfirmation sendCall(
+    public AuthorizeConfirmation sendRequest(
         CentralSystemClient client, AuthorizeRequest request
     ) throws EmulationIOException {
         return extractPayload(
@@ -46,7 +46,7 @@ public class CallFactoryCallSender implements CallsSender {
     }
 
     @Override
-    public StartTransactionConfirmation sendCall(
+    public StartTransactionConfirmation sendRequest(
         CentralSystemClient client, StartTransactionRequest request
     ) throws EmulationIOException {
         return extractPayload(
@@ -55,7 +55,7 @@ public class CallFactoryCallSender implements CallsSender {
     }
 
     @Override
-    public MeterValuesConfirmation sendCall(
+    public MeterValuesConfirmation sendRequest(
         CentralSystemClient client, MeterValuesRequest request
     ) throws EmulationIOException {
         return extractPayload(

@@ -1,6 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.IdTokenGenerator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.StartTransactionConfirmation;
@@ -21,7 +21,7 @@ import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil
 @Component
 public class SendStartTransactionAction implements Consumer<ChargePointEmulator> {
 
-    private final CallsSender callsSender;
+    private final RequestSender callsSender;
 
     private final IdTokenGenerator idTokenGenerator;
 
@@ -29,7 +29,7 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
     public void accept(ChargePointEmulator chargePointEmulator) {
         Optional.of(createStartTransactionRequestFor(chargePointEmulator))
             .map((ThrowingFunction<StartTransactionRequest, StartTransactionConfirmation>)
-                request -> callsSender.sendCall(chargePointEmulator.getCentralSystemClient(), request)
+                request -> callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), request)
             )
             .map(StartTransactionConfirmation::getTransactionId)
             .ifPresentOrElse(

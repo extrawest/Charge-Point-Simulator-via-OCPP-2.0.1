@@ -1,6 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.HeartbeatRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingRunnable;
@@ -23,7 +23,7 @@ public class StartHeartbeatingAction implements Consumer<ChargePointEmulator> {
 
     private final ScheduledExecutorService scheduledExecutorService;
 
-    private final CallsSender callsSender;
+    private final RequestSender callsSender;
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
@@ -33,7 +33,7 @@ public class StartHeartbeatingAction implements Consumer<ChargePointEmulator> {
         }
         scheduledExecutorService.scheduleWithFixedDelay(
             (ThrowingRunnable)
-                () -> callsSender.sendCall(chargePointEmulator.getCentralSystemClient(), HEARTBEAT_REQUEST),
+                () -> callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), HEARTBEAT_REQUEST),
             heartbeatInterval.toSeconds(),
             heartbeatInterval.toSeconds(),
             TimeUnit.SECONDS

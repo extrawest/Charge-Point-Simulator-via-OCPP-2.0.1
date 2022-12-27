@@ -1,6 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.MeterValue;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.MeterValuesRequest;
@@ -20,7 +20,7 @@ import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstant
 @Component
 public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulator> {
 
-    private final CallsSender callsSender;
+    private final RequestSender callsSender;
 
     private final ScheduledExecutorService scheduledExecutorService;
 
@@ -28,7 +28,7 @@ public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulat
     public void accept(ChargePointEmulator chargePointEmulator) {
         long meterValuesSendInterval = chargePointEmulator.getSendMeterValuesInterval().toMillis();
         scheduledExecutorService.scheduleWithFixedDelay(
-            (ThrowingRunnable) () -> callsSender.sendCall(
+            (ThrowingRunnable) () -> callsSender.sendRequest(
                 chargePointEmulator.getCentralSystemClient(),
                 incrementMeterValuesAndCreateRequest(chargePointEmulator)
             ),

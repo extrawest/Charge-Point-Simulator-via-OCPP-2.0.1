@@ -1,6 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.CiString20;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationConfirmation;
@@ -19,13 +19,13 @@ import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil
 @Component
 public class SendBootNotificationAction implements Consumer<ChargePointEmulator> {
 
-    private final CallsSender callsSender;
+    private final RequestSender callsSender;
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         Optional.of(createBootNotificationRequestFor(chargePointEmulator))
             .map((ThrowingFunction<BootNotificationRequest, BootNotificationConfirmation>)
-                bootNotificationRequest -> callsSender.sendCall(
+                bootNotificationRequest -> callsSender.sendRequest(
                     chargePointEmulator.getCentralSystemClient(), bootNotificationRequest
                 )
             )

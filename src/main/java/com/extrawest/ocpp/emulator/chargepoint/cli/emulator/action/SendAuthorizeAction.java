@@ -1,6 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.CiString20;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdToken;
@@ -20,13 +20,13 @@ import static java.lang.Math.min;
 @Component
 public class SendAuthorizeAction implements Consumer<ChargePointEmulator> {
 
-    private final CallsSender callsSender;
+    private final RequestSender callsSender;
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         Optional.of(createAuthorizeRequestFor(chargePointEmulator))
             .map((ThrowingFunction<AuthorizeRequest, AuthorizeConfirmation>)
-                request -> callsSender.sendCall(chargePointEmulator.getCentralSystemClient(), request)
+                request -> callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), request)
             )
             .map(AuthorizeConfirmation::getIdTagInfo)
             .ifPresentOrElse(
