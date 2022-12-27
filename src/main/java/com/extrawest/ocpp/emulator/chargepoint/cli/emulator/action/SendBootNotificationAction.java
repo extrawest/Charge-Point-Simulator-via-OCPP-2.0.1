@@ -2,6 +2,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.CiString20;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationConfirmation;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
@@ -40,7 +41,8 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
 
     private BootNotificationRequest createBootNotificationRequestFor(ChargePointEmulator chargePointEmulator) {
         return new BootNotificationRequest(
-            chargePointEmulator.getChargePointModel(), chargePointEmulator.getChargePointVendor()
+            new CiString20(chargePointEmulator.getChargePointModel()),
+            new CiString20(chargePointEmulator.getChargePointVendor())
         );
     }
 }
