@@ -11,4 +11,6 @@ public interface CallFactory {
     Call<AuthorizeRequest> createCallFor(AuthorizeRequest authorizeRequest);
 
     Call<StartTransactionRequest> createCallFor(StartTransactionRequest startTransactionRequest);
+
+    Call<MeterValuesRequest> createCallFor(MeterValuesRequest meterValuesRequest);
 }
