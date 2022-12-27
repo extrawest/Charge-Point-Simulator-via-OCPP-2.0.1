@@ -9,6 +9,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -30,6 +31,7 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
             )
             .map(CallResult::getPayload)
             .map(BootNotificationConfirmation::getInterval)
+            .map(Duration::ofSeconds)
             .ifPresentOrElse(
                 chargePointEmulator::setHeartbeatInterval,
                 () -> {throw emptyOptionalException();}

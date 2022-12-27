@@ -34,8 +34,8 @@ public class StartHeartbeatingAction implements Consumer<ChargePointEmulator> {
         scheduledExecutorService.scheduleWithFixedDelay(
             (ThrowingRunnable)
                 () -> callsSender.sendCall(chargePointEmulator.getCentralSystemClient(), HEARTBEAT_REQUEST),
-            heartbeatInterval,
-            heartbeatInterval,
+            heartbeatInterval.toSeconds(),
+            heartbeatInterval.toSeconds(),
             TimeUnit.SECONDS
         );
     }
