@@ -37,7 +37,16 @@ public class CallFactoryCallSender implements CallsSender {
     }
 
     @Override
-    public CallResult<StartTransactionConfirmation> sendCall(CentralSystemClient client, StartTransactionRequest request) throws EmulationIOException {
+    public CallResult<StartTransactionConfirmation> sendCall(
+        CentralSystemClient client, StartTransactionRequest request
+    ) throws EmulationIOException {
         return client.sendCall(callFactory.createCallFor(request), StartTransactionConfirmation.class);
+    }
+
+    @Override
+    public CallResult<MeterValuesConfirmation> sendCall(
+        CentralSystemClient client, MeterValuesRequest request
+    ) throws EmulationIOException {
+        return client.sendCall(callFactory.createCallFor(request), MeterValuesConfirmation.class);
     }
 }
