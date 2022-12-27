@@ -23,7 +23,7 @@ public class ChargePointEmulator {
 
     private final String centralSystemUrl;
 
-    private Integer heartbeatInterval; // TODO: refactor to use Duration instead
+    private Duration heartbeatInterval;
 
     private IdTagInfo authorizeIdTagInfo;
 
