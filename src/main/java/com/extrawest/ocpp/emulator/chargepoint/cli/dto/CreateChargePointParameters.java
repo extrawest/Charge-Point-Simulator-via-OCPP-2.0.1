@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class CreateChargePointParameters {
+public class CreateChargePointParameters { // TODO: move non-variable parameters to ChargePointFactory
 
     private final String centralSystemUrl;
 
