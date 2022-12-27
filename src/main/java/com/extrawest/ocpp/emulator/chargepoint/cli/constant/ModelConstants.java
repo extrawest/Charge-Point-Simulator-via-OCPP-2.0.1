@@ -7,4 +7,6 @@ import lombok.NoArgsConstructor;
 public class ModelConstants {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+    public static final int DEFAULT_CONNECTOR_ID = 1;
 }

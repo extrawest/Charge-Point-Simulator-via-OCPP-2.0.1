@@ -14,14 +14,13 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.DEFAULT_CONNECTOR_ID;
 import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.emptyOptionalException;
 import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.unchecked;
 
 @RequiredArgsConstructor
 @Component
 public class SendStartTransactionAction implements Consumer<ChargePointEmulator> {
-
-    private static final int DEFAULT_CONNECTOR_ID = 1;
 
     private final CallsSender callsSender;
 
