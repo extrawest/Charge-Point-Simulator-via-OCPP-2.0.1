@@ -32,14 +32,13 @@ public class ChargePointEmulatorFactoryImpl implements ChargePointEmulatorFactor
 
     @Override
     public ChargePointEmulator createChargePointEmulator(CreateChargePointParameters createChargePointParameters) {
-        var emulator = new ChargePointEmulator(
-            new JettyWebsocketClient(objectMapper, webSocketClient),
-            chargePointModel,
-            chargePointVendor,
-            createChargePointParameters.getChargePointId(),
-            createChargePointParameters.getCentralSystemUrl()
-        );
-        emulator.setSendMeterValuesInterval(sendMeterValuesInterval);
-        return emulator;
+        return ChargePointEmulator.builder()
+            .centralSystemClient(new JettyWebsocketClient(objectMapper, webSocketClient))
+            .chargePointModel(chargePointModel)
+            .chargePointVendor(chargePointVendor)
+            .chargePointId(createChargePointParameters.getChargePointId())
+            .centralSystemUrl(createChargePointParameters.getCentralSystemUrl())
+            .sendMeterValuesInterval(sendMeterValuesInterval)
+            .build();
     }
 }
