@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model.call.impl;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.*;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.Call;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallAction;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallFactory;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.*;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;

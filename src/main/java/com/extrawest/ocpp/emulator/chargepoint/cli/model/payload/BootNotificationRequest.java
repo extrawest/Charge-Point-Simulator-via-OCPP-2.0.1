@@ -1,4 +1,4 @@
-package com.extrawest.ocpp.emulator.chargepoint.cli.model;
+package com.extrawest.ocpp.emulator.chargepoint.cli.model.payload;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

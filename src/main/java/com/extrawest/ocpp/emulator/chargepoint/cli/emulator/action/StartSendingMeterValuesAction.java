@@ -3,7 +3,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.MeterValue;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.MeterValuesRequest;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.MeterValuesRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.SampledValue;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingRunnable;
 import lombok.RequiredArgsConstructor;

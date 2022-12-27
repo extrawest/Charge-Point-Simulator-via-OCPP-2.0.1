@@ -2,7 +2,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.HeartbeatRequest;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.HeartbeatRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingRunnable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

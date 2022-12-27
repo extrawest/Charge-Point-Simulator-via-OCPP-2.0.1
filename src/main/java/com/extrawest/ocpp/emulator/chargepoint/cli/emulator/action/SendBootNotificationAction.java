@@ -2,8 +2,8 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootNotificationConfirmation;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootNotificationRequest;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationConfirmation;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
 import lombok.RequiredArgsConstructor;

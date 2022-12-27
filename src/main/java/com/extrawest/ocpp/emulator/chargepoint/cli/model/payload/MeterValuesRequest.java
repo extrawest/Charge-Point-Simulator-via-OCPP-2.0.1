@@ -1,6 +1,7 @@
-package com.extrawest.ocpp.emulator.chargepoint.cli.model;
+package com.extrawest.ocpp.emulator.chargepoint.cli.model.payload;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.IllegalArgumentApplicationException;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.MeterValue;
 import lombok.Builder;
 import lombok.Singular;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-public class MeterValuesRequest { // TODO: create a new package for the payloads (*.Request, *Confirmation)
+public class MeterValuesRequest {
 
     private final int connectorId;
 

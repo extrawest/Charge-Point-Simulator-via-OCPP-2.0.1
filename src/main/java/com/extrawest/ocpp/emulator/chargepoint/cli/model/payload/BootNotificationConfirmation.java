@@ -1,5 +1,6 @@
-package com.extrawest.ocpp.emulator.chargepoint.cli.model;
+package com.extrawest.ocpp.emulator.chargepoint.cli.model.payload;
 
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.RegistrationStatus;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

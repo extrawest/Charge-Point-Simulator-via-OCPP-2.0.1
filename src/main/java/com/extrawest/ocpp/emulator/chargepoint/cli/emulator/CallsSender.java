@@ -1,8 +1,8 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationIOException;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.*;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.*;
 
 public interface CallsSender { // TODO: make the methods type-consistent (a request should produce a response, not a CallResult, thus not CallsSender, but RequestsSender)
 

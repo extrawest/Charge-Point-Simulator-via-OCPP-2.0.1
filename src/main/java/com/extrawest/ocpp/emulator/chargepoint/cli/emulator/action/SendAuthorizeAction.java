@@ -2,8 +2,8 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.AuthorizeConfirmation;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.AuthorizeRequest;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.AuthorizeConfirmation;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.AuthorizeRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdToken;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.CiString20;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;

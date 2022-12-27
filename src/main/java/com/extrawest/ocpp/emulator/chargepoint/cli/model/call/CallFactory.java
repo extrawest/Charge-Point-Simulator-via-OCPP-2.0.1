@@ -1,6 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model.call;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.*;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.*;
 
 public interface CallFactory {
 
