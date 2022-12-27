@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
-public class CallFactoryCallSender implements RequestSender {
+public class CallFactoryRequestSender implements RequestSender {
 
     private final CallFactory callFactory;
 
