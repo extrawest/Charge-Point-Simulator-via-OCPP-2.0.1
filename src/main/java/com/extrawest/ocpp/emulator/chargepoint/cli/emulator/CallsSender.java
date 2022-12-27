@@ -17,4 +17,7 @@ public interface CallsSender { // TODO: make the methods type-consistent (a requ
 
     CallResult<StartTransactionConfirmation> sendCall(CentralSystemClient client, StartTransactionRequest request)
         throws EmulationIOException;
+
+    CallResult<MeterValuesConfirmation> sendCall(CentralSystemClient client, MeterValuesRequest request)
+        throws EmulationIOException;
 }
