@@ -1,17 +1,16 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdTagInfo;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.Duration;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
 @ToString
+@Builder
 public class ChargePointEmulator {
 
     private final CentralSystemClient centralSystemClient;
