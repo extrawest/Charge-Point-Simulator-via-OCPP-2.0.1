@@ -2,11 +2,10 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CallsSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.CiString20;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdToken;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.AuthorizeConfirmation;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.AuthorizeRequest;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdToken;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.CiString20;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +25,9 @@ public class SendAuthorizeAction implements Consumer<ChargePointEmulator> {
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         Optional.of(createAuthorizeRequestFor(chargePointEmulator))
-            .map((ThrowingFunction<AuthorizeRequest, CallResult<AuthorizeConfirmation>>)
+            .map((ThrowingFunction<AuthorizeRequest, AuthorizeConfirmation>)
                 request -> callsSender.sendCall(chargePointEmulator.getCentralSystemClient(), request)
             )
-            .map(CallResult::getPayload)
             .map(AuthorizeConfirmation::getIdTagInfo)
             .ifPresentOrElse(
                 chargePointEmulator::setAuthorizeIdTagInfo,

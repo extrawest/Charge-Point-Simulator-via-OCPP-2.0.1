@@ -5,7 +5,6 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.CiString20;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationConfirmation;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationRequest;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -25,12 +24,11 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         Optional.of(createBootNotificationRequestFor(chargePointEmulator))
-            .map((ThrowingFunction<BootNotificationRequest, CallResult<BootNotificationConfirmation>>)
+            .map((ThrowingFunction<BootNotificationRequest, BootNotificationConfirmation>)
                 bootNotificationRequest -> callsSender.sendCall(
                     chargePointEmulator.getCentralSystemClient(), bootNotificationRequest
                 )
             )
-            .map(CallResult::getPayload)
             .map(BootNotificationConfirmation::getInterval)
             .map(Duration::ofSeconds)
             .ifPresentOrElse(

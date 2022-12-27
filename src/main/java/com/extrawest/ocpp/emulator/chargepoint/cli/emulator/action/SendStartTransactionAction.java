@@ -5,7 +5,6 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.IdTokenGenerator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.StartTransactionConfirmation;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.StartTransactionRequest;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -29,10 +28,9 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         Optional.of(createStartTransactionRequestFor(chargePointEmulator))
-            .map((ThrowingFunction<StartTransactionRequest, CallResult<StartTransactionConfirmation>>)
+            .map((ThrowingFunction<StartTransactionRequest, StartTransactionConfirmation>)
                 request -> callsSender.sendCall(chargePointEmulator.getCentralSystemClient(), request)
             )
-            .map(CallResult::getPayload)
             .map(StartTransactionConfirmation::getTransactionId)
             .ifPresentOrElse(
                 chargePointEmulator::setCurrentTransactionId,
