@@ -32,12 +32,6 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
     @Value("${ocpp.charge-point.id-index-prefix:CP}")
     private final String chargePointIdIndexPrefix;
 
-    @Value("${ocpp.charge-point.boot-notification.chargePointModel}")
-    private final String chargePointModel;
-
-    @Value("${ocpp.charge-point.boot-notification.chargePointVendor}")
-    private final String chargePointVendor;
-
     private final CentralSystemConnectAction connectAction;
 
     private final SendBootNotificationAction sendBootNotificationAction;
@@ -70,7 +64,7 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
         return LongStream.range(0, parameters.getChargePointsCount())
             .parallel()
             .mapToObj(i -> new CreateChargePointParameters(
-                parameters.getCentralSystemUrl(), createChargePointIdForIndex(i), chargePointModel, chargePointVendor
+                parameters.getCentralSystemUrl(), createChargePointIdForIndex(i)
             ))
             .map(chargePointEmulatorFactory::createChargePointEmulator)
             .toList();

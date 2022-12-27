@@ -24,12 +24,18 @@ public class ChargePointEmulatorFactoryImpl implements ChargePointEmulatorFactor
     @NonNull
     private final Duration sendMeterValuesInterval;
 
+    @Value("${ocpp.charge-point.boot-notification.chargePointModel}")
+    private final String chargePointModel;
+
+    @Value("${ocpp.charge-point.boot-notification.chargePointVendor}")
+    private final String chargePointVendor;
+
     @Override
     public ChargePointEmulator createChargePointEmulator(CreateChargePointParameters createChargePointParameters) {
         var emulator = new ChargePointEmulator(
             new JettyWebsocketClient(objectMapper, webSocketClient),
-            createChargePointParameters.getChargePointModel(),
-            createChargePointParameters.getChargePointVendor(),
+            chargePointModel,
+            chargePointVendor,
             createChargePointParameters.getChargePointId(),
             createChargePointParameters.getCentralSystemUrl()
         );
