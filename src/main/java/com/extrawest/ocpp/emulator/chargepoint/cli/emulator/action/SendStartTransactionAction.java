@@ -3,6 +3,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.IdTokenGenerator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.exception.IllegalStateApplicationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.StartTransactionConfirmation;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.StartTransactionRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
@@ -15,7 +16,6 @@ import java.util.function.Consumer;
 
 import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.DEFAULT_CONNECTOR_ID;
 import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.emptyOptionalException;
-import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.unchecked;
 
 @RequiredArgsConstructor
 @Component
@@ -41,11 +41,11 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
     private StartTransactionRequest createStartTransactionRequestFor(ChargePointEmulator chargePointEmulator) {
         var idTag = chargePointEmulator.getAuthorizeIdTagInfo();
         if (idTag == null) {
-            throw unchecked(new IllegalStateException("""
+            throw new IllegalStateApplicationException("""
                 The charge point does not have idTag set. \
                 Please, consider sending an AuthorizeRequest first \
                 and populate the emulator with the tag from the response."""
-            ));
+            );
         }
         return new StartTransactionRequest(
             DEFAULT_CONNECTOR_ID,
