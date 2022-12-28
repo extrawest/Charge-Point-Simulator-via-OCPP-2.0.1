@@ -19,4 +19,7 @@ public interface RequestSender {
 
     MeterValuesConfirmation sendRequest(CentralSystemClient client, MeterValuesRequest request)
         throws EmulationIOException;
+
+    StopTransactionConfirmation sendRequest(CentralSystemClient client, StopTransactionRequest request)
+        throws EmulationIOException;
 }
