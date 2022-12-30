@@ -1,5 +1,6 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @RequiredArgsConstructor
+@Builder
 public class ChargePointsEmulationParameters {
 
     @NotBlank
