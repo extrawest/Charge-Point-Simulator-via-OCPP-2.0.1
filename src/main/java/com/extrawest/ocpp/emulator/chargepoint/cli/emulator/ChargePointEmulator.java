@@ -11,6 +11,7 @@ import java.time.Duration;
 @AllArgsConstructor
 @ToString
 @Builder
+@EqualsAndHashCode(of = "chargePointId")
 public class ChargePointEmulator {
 
     private final CentralSystemClient centralSystemClient;
