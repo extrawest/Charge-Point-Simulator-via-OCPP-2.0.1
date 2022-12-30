@@ -28,6 +28,9 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
     private int connectionCountForLogs;
     private final ChargePointEmulatorsService chargePointEmulatorsService;
 
+    @Value("${ocpp.charge-point.in-transaction-percent:10}")
+    private double chargePointsInTransactionPercent;
+
     public StartChargePointsEmulationCommand(@Autowired ChargePointEmulatorsService chargePointEmulatorsService) {
         this.chargePointEmulatorsService = chargePointEmulatorsService;
     }
@@ -66,11 +69,35 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
         connectionCountForLogs = connectionCountForLogsParameter;
     }
 
+    @Option(
+        names = {"--inTransactionPercent", "-T"},
+        description = "@|fg(red)Specify a percent [0; 100] of the charge points to be in an active charging session|@"
+    )
+    public void setChargePointsInTransactionPercent(double chargePointsInTransactionPercent) {
+        boolean invalid = chargePointsInTransactionPercent < 0 || chargePointsInTransactionPercent > 100;
+        if (invalid) {
+            throw new CommandLine.ParameterException(
+                spec.commandLine(),
+                String.format("""
+                    Invalid value '%s' for option '--inTransactionPercent'. \
+                    The percentage is expected to be between 0 and 100 inclusively""",
+                    chargePointsInTransactionPercent
+                )
+            );
+        }
+        this.chargePointsInTransactionPercent = chargePointsInTransactionPercent;
+    }
+
     @Override
     public Integer call() throws EmulationException {
         try {
             chargePointEmulatorsService.startEmulation(
-                new ChargePointsEmulationParameters(csUrl, stationCount, connectionCountForLogs)
+                ChargePointsEmulationParameters.builder()
+                    .centralSystemUrl(csUrl)
+                    .chargePointsCount(stationCount)
+                    .connectionCountForLogs(connectionCountForLogs)
+                    .chargePointsInTransactionPercent(chargePointsInTransactionPercent)
+                    .build()
             );
         } catch (EmulationConnectionException e) {
             log.warn("Central system unavailable, please check that Central System is alive");
