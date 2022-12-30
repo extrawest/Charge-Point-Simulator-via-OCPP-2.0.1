@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -26,16 +27,20 @@ public class StartHeartbeatingAction implements Consumer<ChargePointEmulator> {
 
     private final RequestSender callsSender;
 
+    private final ScheduledHeartbeatsStorage scheduledHeartbeatsStorage;
+
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
-        var heartbeatInterval = Optional.ofNullable(chargePointEmulator.getHeartbeatInterval())
+        var heartbeatIntervalSeconds = Optional.ofNullable(chargePointEmulator.getHeartbeatInterval())
+            .map(Duration::toSeconds)
             .orElseThrow(() -> heartbeatNotSet(chargePointEmulator));
-        scheduledExecutorService.scheduleWithFixedDelay(
+        var scheduledHeartbeating = scheduledExecutorService.scheduleWithFixedDelay(
             (ThrowingRunnable)
                 () -> callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), HEARTBEAT_REQUEST),
-            heartbeatInterval.toSeconds(),
-            heartbeatInterval.toSeconds(),
+            heartbeatIntervalSeconds,
+            heartbeatIntervalSeconds,
             TimeUnit.SECONDS
         );
+        scheduledHeartbeatsStorage.store(chargePointEmulator, scheduledHeartbeating);
     }
 }
