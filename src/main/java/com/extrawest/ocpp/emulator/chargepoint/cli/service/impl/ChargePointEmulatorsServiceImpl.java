@@ -4,10 +4,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationPara
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulatorFactory;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.CentralSystemConnectAction;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.LogMultipleEmulatorStartedAction;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.SendBootNotificationAction;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.StartHeartbeatingAction;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.*;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +34,14 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
     private final SendBootNotificationAction sendBootNotificationAction;
 
     private final StartHeartbeatingAction startHeartbeatingAction;
+
+    private final StopHeartbeatingAction stopHeartbeatingAction;
+
+    private final SendAuthorizeAction sendAuthorizeAction;
+
+    private final SendStartTransactionAction sendStartTransactionAction;
+
+    private final StartSendingMeterValuesAction startSendingMeterValuesAction;
 
     @Override
     public void startEmulation(@Valid ChargePointsEmulationParameters parameters) throws EmulationException {
@@ -86,6 +91,15 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
         );
 
         log.info(chargePointEmulators.size() + " charge points emulators were created");
+
+        chargePointEmulators.stream()
+            .limit((long) (chargePointEmulators.size() * parameters.getChargePointsInTransactionFraction()))
+            .forEach(chargePointEmulator -> stopHeartbeatingAction
+                .andThen(sendAuthorizeAction)
+                .andThen(sendStartTransactionAction)
+                .andThen(startSendingMeterValuesAction)
+                .accept(chargePointEmulator)
+            );
     }
 
     private String createChargePointIdForIndex(long chargePointIndex) {
