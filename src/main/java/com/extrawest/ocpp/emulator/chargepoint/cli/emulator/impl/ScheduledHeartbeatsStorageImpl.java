@@ -28,7 +28,7 @@ public class ScheduledHeartbeatsStorageImpl implements ScheduledHeartbeatsStorag
     @Override
     public ScheduledFuture<?> remove(ChargePointEmulator chargePointEmulator) {
         return Optional.of(chargePointEmulator)
-            .map(scheduledHeartbeats::get)
+            .map(scheduledHeartbeats::remove)
             .orElseThrow(() -> new IllegalStateApplicationException(
                 "There is no heartbeating scheduled future in this storage. Consider storing"
             ));
