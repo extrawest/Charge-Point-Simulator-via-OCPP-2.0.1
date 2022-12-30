@@ -28,8 +28,8 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
     private int connectionCountForLogs;
     private final ChargePointEmulatorsService chargePointEmulatorsService;
 
-    @Value("${ocpp.charge-point.in-transaction-percent:10}")
-    private double chargePointsInTransactionPercent;
+    @Value("${ocpp.charge-point.in-transaction-percent:0.1}")
+    private double chargePointsInTransactionFraction;
 
     public StartChargePointsEmulationCommand(@Autowired ChargePointEmulatorsService chargePointEmulatorsService) {
         this.chargePointEmulatorsService = chargePointEmulatorsService;
@@ -85,7 +85,7 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
                 )
             );
         }
-        this.chargePointsInTransactionPercent = chargePointsInTransactionPercent;
+        this.chargePointsInTransactionFraction = chargePointsInTransactionPercent;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
                     .centralSystemUrl(csUrl)
                     .chargePointsCount(stationCount)
                     .connectionCountForLogs(connectionCountForLogs)
-                    .chargePointsInTransactionPercent(chargePointsInTransactionPercent)
+                    .chargePointsInTransactionFraction(chargePointsInTransactionFraction)
                     .build()
             );
         } catch (EmulationConnectionException e) {
