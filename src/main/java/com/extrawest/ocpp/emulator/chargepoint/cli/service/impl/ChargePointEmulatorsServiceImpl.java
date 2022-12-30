@@ -4,9 +4,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationPara
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulatorFactory;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.SendBootNotificationAction;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.CentralSystemConnectAction;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.StartHeartbeatingAction;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.*;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
 import lombok.RequiredArgsConstructor;
@@ -73,29 +71,19 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
     private void startChargePointEmulators(
         List<ChargePointEmulator> chargePointEmulators, ChargePointsEmulationParameters parameters
     ) {
-        int connectionCountForLogs = parameters.getConnectionCountForLogs();
+        var logMultipleEmulatorStartedAction =
+            new LogMultipleEmulatorStartedAction(parameters.getConnectionCountForLogs());
 
         log.info("Starting " + chargePointEmulators.size() + " emulators");
 
-        var chargePointsIterator = chargePointEmulators.listIterator();
-        while (chargePointsIterator.hasNext()) {
-            var index = chargePointsIterator.nextIndex();
-            var chargePointEmulator = chargePointsIterator.next();
-            Consumer<ChargePointEmulator> startAction = connectAction;
-            if (indexNeedsBeLogged(index, connectionCountForLogs)) {
-                startAction = startAction.andThen(
-                    emulator -> log.info("Currently running " + (index + 1) + " charge points emulators")
-                );
-            }
-            startAction = startAction.andThen(sendBootNotificationAction).andThen(startHeartbeatingAction);
-            startAction.accept(chargePointEmulator);
-        }
-        log.info(chargePointEmulators.size() + " charge points emulators were created");
-    }
+        chargePointEmulators.forEach(chargePointEmulator -> connectAction
+            .andThen(logMultipleEmulatorStartedAction)
+            .andThen(sendBootNotificationAction)
+            .andThen(startHeartbeatingAction)
+            .accept(chargePointEmulator)
+        );
 
-    private boolean indexNeedsBeLogged(int index, int logEachNth) {
-        var startFromOneIndex = index + 1;
-        return (startFromOneIndex >= logEachNth) && (startFromOneIndex % logEachNth == 0);
+        log.info(chargePointEmulators.size() + " charge points emulators were created");
     }
 
     private String createChargePointIdForIndex(long chargePointIndex) {
