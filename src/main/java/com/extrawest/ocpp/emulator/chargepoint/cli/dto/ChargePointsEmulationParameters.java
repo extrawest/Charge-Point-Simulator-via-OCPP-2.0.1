@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
@@ -20,4 +21,8 @@ public class ChargePointsEmulationParameters {
 
     @Min(1)
     private final int connectionCountForLogs;
+
+    @Min(0)
+    @Max(100)
+    private final double chargePointsInTransactionPercent;
 }
