@@ -4,7 +4,10 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationPara
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParameters;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulatorFactory;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.*;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.CentralSystemConnectAction;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.LogMultipleEmulatorStartedAction;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.SendBootNotificationAction;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.StartHeartbeatingAction;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.stream.LongStream;
 
 @Service
