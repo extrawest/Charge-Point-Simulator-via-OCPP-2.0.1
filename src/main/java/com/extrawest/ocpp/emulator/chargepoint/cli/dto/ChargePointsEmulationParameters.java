@@ -23,6 +23,6 @@ public class ChargePointsEmulationParameters {
     private final int connectionCountForLogs;
 
     @Min(0)
-    @Max(100)
-    private final double chargePointsInTransactionPercent;
+    @Max(1)
+    private final double chargePointsInTransactionFraction;
 }
