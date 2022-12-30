@@ -1,6 +1,7 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ScheduledHeartbeatsStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
