@@ -6,6 +6,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulatorF
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.jetty.websocket.client.JettyUpgradeListener;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,8 @@ public class ChargePointEmulatorFactoryImpl implements ChargePointEmulatorFactor
 
     private final WebSocketClient webSocketClient;
 
+    private final JettyUpgradeListener jettyUpgradeListener;
+
     @Value("${ocpp.charge-point.meter-values.send-interval:PT10S}")
     @NonNull
     private final Duration sendMeterValuesInterval;
@@ -33,7 +36,7 @@ public class ChargePointEmulatorFactoryImpl implements ChargePointEmulatorFactor
     @Override
     public ChargePointEmulator createChargePointEmulator(CreateChargePointParameters createChargePointParameters) {
         return ChargePointEmulator.builder()
-            .centralSystemClient(new JettyWebsocketClient(objectMapper, webSocketClient))
+            .centralSystemClient(new JettyWebsocketClient(objectMapper, webSocketClient, jettyUpgradeListener))
             .chargePointModel(chargePointModel)
             .chargePointVendor(chargePointVendor)
             .chargePointId(createChargePointParameters.getChargePointId())
