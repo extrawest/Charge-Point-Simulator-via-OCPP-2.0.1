@@ -2,6 +2,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -9,6 +10,7 @@ import lombok.ToString;
 @ToString
 public class IdToken {
 
+    @JsonValue
     private final CiString20 idToken;
 
     @JsonCreator
