@@ -2,6 +2,9 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.HttpRequest;
+import org.eclipse.jetty.http.HttpField;
+import org.eclipse.jetty.websocket.client.JettyUpgradeListener;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
 import java.util.concurrent.Executor;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.SEC_WEBSOCKET_PROTOCOL_HEADER_NAME;
+import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.SEC_WEBSOCKET_PROTOCOL_HEADER_VALUE;
 
 @Configuration
 @RequiredArgsConstructor
@@ -31,5 +37,18 @@ public class JettyConfiguration {
         httpClient.setMaxRequestsQueuedPerDestination(Integer.MAX_VALUE);
         httpClient.setExecutor(executor);
         return httpClient;
+    }
+
+    @Bean
+    public JettyUpgradeListener jettyUpgradeListener() {
+        var secWebSocketProtocolHeader = new HttpField(
+            SEC_WEBSOCKET_PROTOCOL_HEADER_NAME, SEC_WEBSOCKET_PROTOCOL_HEADER_VALUE
+        );
+        return new JettyUpgradeListener() {
+            @Override
+            public void onHandshakeRequest(HttpRequest request) {
+                request.addHeader(secWebSocketProtocolHeader);
+            }
+        };
     }
 }
