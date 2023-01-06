@@ -2,6 +2,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.picocli;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.constant.PicocliConstants;
 import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsEmulationParameters;
+import com.extrawest.ocpp.emulator.chargepoint.cli.dto.ChargePointsStartMode;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationConnectionException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
@@ -30,6 +31,9 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
 
     @Value("${ocpp.charge-point.in-transaction-percent:0.1}")
     private double chargePointsInTransactionFraction;
+
+    @Value("${ocpp.emulation.start-mode:PARALLEL}")
+    private ChargePointsStartMode chargePointsStartMode;
 
     public StartChargePointsEmulationCommand(@Autowired ChargePointEmulatorsService chargePointEmulatorsService) {
         this.chargePointEmulatorsService = chargePointEmulatorsService;
@@ -88,6 +92,14 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
         this.chargePointsInTransactionFraction = chargePointsInTransactionPercent;
     }
 
+    @Option(
+        names = {"--startMode", "-M"},
+        description = "@|fg(red)Specify the start mode. Can be either PARALLEL (default) or SEQUENTIAL|@"
+    )
+    public void setChargePointsStartMode(ChargePointsStartMode chargePointsStartMode) {
+        this.chargePointsStartMode = chargePointsStartMode;
+    }
+
     @Override
     public Integer call() throws EmulationException {
         try {
@@ -97,6 +109,7 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
                     .chargePointsCount(stationCount)
                     .connectionCountForLogs(connectionCountForLogs)
                     .chargePointsInTransactionFraction(chargePointsInTransactionFraction)
+                    .chargePointsStartMode(chargePointsStartMode)
                     .build()
             );
         } catch (EmulationConnectionException e) {
