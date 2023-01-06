@@ -16,6 +16,10 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.function.Consumer;
 import java.util.stream.LongStream;
 
 @Service
@@ -23,6 +27,8 @@ import java.util.stream.LongStream;
 @Validated
 @Slf4j
 public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsService {
+
+    private final ExecutorService executorService;
 
     private final ChargePointEmulatorFactory chargePointEmulatorFactory;
 
@@ -83,23 +89,75 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
 
         log.info("Starting " + chargePointEmulators.size() + " emulators");
 
-        chargePointEmulators.forEach(chargePointEmulator -> connectAction
+        var bootEmulatorAndStartHeartbeatingAction = connectAction
             .andThen(logMultipleEmulatorStartedAction)
             .andThen(sendBootNotificationAction)
-            .andThen(startHeartbeatingAction)
-            .accept(chargePointEmulator)
-        );
+            .andThen(startHeartbeatingAction);
+
+        var stopHeartbeatingAndStartTransactionAction = stopHeartbeatingAction
+            .andThen(sendAuthorizeAction)
+            .andThen(sendStartTransactionAction)
+            .andThen(startSendingMeterValuesAction);
+
+        switch (parameters.getChargePointsStartMode()) {
+            case PARALLEL -> startChargePointEmulatorsParallel(
+                chargePointEmulators,
+                parameters,
+                bootEmulatorAndStartHeartbeatingAction,
+                stopHeartbeatingAndStartTransactionAction
+            );
+            case SEQUENTIAL -> startChargePointEmulatorsSequential(
+                chargePointEmulators,
+                parameters,
+                bootEmulatorAndStartHeartbeatingAction,
+                stopHeartbeatingAndStartTransactionAction
+            );
+        }
 
         log.info(chargePointEmulators.size() + " charge points emulators were created");
+    }
+
+    private void startChargePointEmulatorsParallel(
+        List<ChargePointEmulator> chargePointEmulators,
+        ChargePointsEmulationParameters parameters,
+        Consumer<ChargePointEmulator> bootEmulatorAndStartHeartbeatingAction,
+        Consumer<ChargePointEmulator> stopHeartbeatingAndStartTransactionAction
+    ) {
+        chargePointEmulators.stream()
+            .map(emulator -> (Runnable) () -> bootEmulatorAndStartHeartbeatingAction.accept(emulator))
+            .map(executorService::submit)
+            .toList()
+            .forEach(this::tryWaitForResult);
 
         chargePointEmulators.stream()
             .limit((long) (chargePointEmulators.size() * parameters.getChargePointsInTransactionFraction()))
-            .forEach(chargePointEmulator -> stopHeartbeatingAction
-                .andThen(sendAuthorizeAction)
-                .andThen(sendStartTransactionAction)
-                .andThen(startSendingMeterValuesAction)
-                .accept(chargePointEmulator)
-            );
+            .map(emulator -> (Runnable) () -> stopHeartbeatingAndStartTransactionAction.accept(emulator))
+            .map(executorService::submit)
+            .toList()
+            .forEach(this::tryWaitForResult);
+    }
+
+    private void startChargePointEmulatorsSequential(
+        List<ChargePointEmulator> chargePointEmulators,
+        ChargePointsEmulationParameters parameters,
+        Consumer<ChargePointEmulator> bootEmulatorAndStartHeartbeatingAction,
+        Consumer<ChargePointEmulator> stopHeartbeatingAndStartTransactionAction
+    ) {
+        chargePointEmulators.forEach(bootEmulatorAndStartHeartbeatingAction);
+        chargePointEmulators.stream()
+            .limit((long) (chargePointEmulators.size() * parameters.getChargePointsInTransactionFraction()))
+            .forEach(stopHeartbeatingAndStartTransactionAction);
+    }
+
+    private void tryWaitForResult(Future<?> future) {
+        try {
+            future.get();
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     private String createChargePointIdForIndex(long chargePointIndex) {
