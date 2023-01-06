@@ -5,17 +5,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 @Configuration
 @RequiredArgsConstructor
 public class ExecutorConfiguration {
 
-    @Value("${emulation.scheduling.thread-pool.core-size:20}")
+    @Value("${ocpp.emulation.scheduling.thread-pool.core-size:10}")
     private final int schedulingPoolCoreSize;
 
     @Bean(destroyMethod = "shutdownNow")
-    public ScheduledThreadPoolExecutor executor() {
-        return new ScheduledThreadPoolExecutor(schedulingPoolCoreSize);
+    public ScheduledExecutorService executor() {
+        return Executors.newScheduledThreadPool(schedulingPoolCoreSize);
     }
 }
