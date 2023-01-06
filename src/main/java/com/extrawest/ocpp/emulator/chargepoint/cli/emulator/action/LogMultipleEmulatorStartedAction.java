@@ -14,12 +14,16 @@ public class LogMultipleEmulatorStartedAction implements Consumer<ChargePointEmu
 
     private int currentLogRequestCounter;
 
+    private final Object currentLogRequestCounterMonitor = new Object();
+
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
-        currentLogRequestCounter++;
+        synchronized (currentLogRequestCounterMonitor) {
+            currentLogRequestCounter++;
 
-        if (indexNeedsBeLogged(currentLogRequestCounter, logMultipleForLogs)) {
-            log.info("Currently running " + currentLogRequestCounter + " charge points emulators");
+            if (indexNeedsBeLogged(currentLogRequestCounter, logMultipleForLogs)) {
+                log.info("Currently running " + currentLogRequestCounter + " charge points emulators");
+            }
         }
     }
 
