@@ -9,6 +9,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationE
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +29,7 @@ import java.util.stream.LongStream;
 @Slf4j
 public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsService {
 
+    @Qualifier("ExecutorService")
     private final ExecutorService executorService;
 
     private final ChargePointEmulatorFactory chargePointEmulatorFactory;
