@@ -23,13 +23,15 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
     @CommandLine.Spec
     CommandLine.Model.CommandSpec spec;
     private String csUrl;
+
+    @Value("${ocpp.emulation.charge-point.stations-count:64500}")
     private int stationCount;
 
-    @Value("${ocpp.charge-point.logs-count:200}")
+    @Value("${ocpp.emulation.charge-point.logs-count:250}")
     private int connectionCountForLogs;
     private final ChargePointEmulatorsService chargePointEmulatorsService;
 
-    @Value("${ocpp.charge-point.in-transaction-percent:0.1}")
+    @Value("${ocpp.emulation.charge-point.in-transaction-fraction:0.1}")
     private double chargePointsInTransactionFraction;
 
     @Value("${ocpp.emulation.start.mode:PARALLEL}")
@@ -51,9 +53,10 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
         csUrl = csUrlParameter;
     }
 
-    @Option(names = {"--stationCount", "-S"},
-        description = "@|fg(red)Specify a count of Charge Points for emulation, value should be integer and greater than zero|@",
-        required = true)
+    @Option(
+        names = {"--stationCount", "-S"},
+        description = "@|fg(red)Specify a count of Charge Points for emulation, value should be integer and greater than zero|@"
+    )
     public void setStationCount (int stationCountParameter) {
         boolean invalid = stationCountParameter <= 0;
         if (invalid) {
