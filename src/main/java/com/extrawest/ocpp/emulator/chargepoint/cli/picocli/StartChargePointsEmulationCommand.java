@@ -32,7 +32,7 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
     @Value("${ocpp.charge-point.in-transaction-percent:0.1}")
     private double chargePointsInTransactionFraction;
 
-    @Value("${ocpp.emulation.start-mode:PARALLEL}")
+    @Value("${ocpp.emulation.start.mode:PARALLEL}")
     private ChargePointsStartMode chargePointsStartMode;
 
     public StartChargePointsEmulationCommand(@Autowired ChargePointEmulatorsService chargePointEmulatorsService) {
@@ -74,22 +74,22 @@ public class StartChargePointsEmulationCommand implements Callable<Integer> {
     }
 
     @Option(
-        names = {"--inTransactionPercent", "-T"},
-        description = "@|fg(red)Specify a percent [0; 100] of the charge points to be in an active charging session|@"
+        names = {"--inTransactionFraction", "-T"},
+        description = "@|fg(red)Specify a fraction [0; 1] of the charge points to be in an active charging session|@"
     )
-    public void setChargePointsInTransactionPercent(double chargePointsInTransactionPercent) {
-        boolean invalid = chargePointsInTransactionPercent < 0 || chargePointsInTransactionPercent > 100;
+    public void setChargePointsInTransactionPercent(double chargePointsInTransactionFraction) {
+        boolean invalid = chargePointsInTransactionFraction < 0 || chargePointsInTransactionFraction > 1;
         if (invalid) {
             throw new CommandLine.ParameterException(
                 spec.commandLine(),
                 String.format("""
-                    Invalid value '%s' for option '--inTransactionPercent'. \
-                    The percentage is expected to be between 0 and 100 inclusively""",
-                    chargePointsInTransactionPercent
+                    Invalid value '%s' for option '--inTransactionFraction'. \
+                    The fraction is expected to be between 0 and 1 inclusively""",
+                    chargePointsInTransactionFraction
                 )
             );
         }
-        this.chargePointsInTransactionFraction = chargePointsInTransactionPercent;
+        this.chargePointsInTransactionFraction = chargePointsInTransactionFraction;
     }
 
     @Option(
