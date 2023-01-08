@@ -10,7 +10,5 @@ public class ModelConstants {
 
     public static final int DEFAULT_CONNECTOR_ID = 1;
 
-    public static final String SEC_WEBSOCKET_PROTOCOL_HEADER_NAME = "Sec-WebSocket-Protocol";
-
-    public static final String SEC_WEBSOCKET_PROTOCOL_HEADER_VALUE = "ocpp1.6";
+    public static final String WS_SUB_PROTOCOL_NAME = "ocpp1.6";
 }
