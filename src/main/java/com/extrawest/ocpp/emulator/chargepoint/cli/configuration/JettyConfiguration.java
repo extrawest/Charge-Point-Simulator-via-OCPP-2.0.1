@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
-import java.util.concurrent.Executor;
 
 import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.WS_SUB_PROTOCOL_NAME;
 
@@ -29,10 +28,9 @@ public class JettyConfiguration {
     }
 
     @Bean
-    public HttpClient httpClient(Executor executor) {
+    public HttpClient httpClient() {
         var httpClient = new HttpClient();
         httpClient.setMaxRequestsQueuedPerDestination(Integer.MAX_VALUE);
-        httpClient.setExecutor(executor);
         return httpClient;
     }
 
