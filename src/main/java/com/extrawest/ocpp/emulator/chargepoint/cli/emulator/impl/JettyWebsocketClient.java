@@ -16,7 +16,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.eclipse.jetty.websocket.client.JettyUpgradeListener;
+import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class JettyWebsocketClient implements CentralSystemClient {
 
     private final WebSocketClient webSocketClient;
 
-    private final JettyUpgradeListener jettyUpgradeListener;
+    private final ClientUpgradeRequest clientUpgradeRequest;
 
     @Getter(AccessLevel.PRIVATE)
     @Setter(AccessLevel.PRIVATE)
@@ -118,7 +118,7 @@ public class JettyWebsocketClient implements CentralSystemClient {
 
     private CompletableFuture<Session> connectAsync(URI centralSystemUri) {
         try {
-            return webSocketClient.connect(this, centralSystemUri, null, jettyUpgradeListener);
+            return webSocketClient.connect(this, centralSystemUri, clientUpgradeRequest);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             return CompletableFuture.failedFuture(e);
