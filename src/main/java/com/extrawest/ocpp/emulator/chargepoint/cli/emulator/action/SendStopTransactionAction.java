@@ -26,6 +26,7 @@ public class SendStopTransactionAction implements Consumer<ChargePointEmulator> 
         var client = chargePointEmulator.getCentralSystemClient();
         try {
             requestSender.sendRequest(client, request);
+            chargePointEmulator.setCurrentTransactionId(null);
         } catch (EmulationIOException e) {
             throw unchecked(e);
         }
