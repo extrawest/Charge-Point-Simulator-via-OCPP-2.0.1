@@ -3,6 +3,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.IdTokenGenerator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.IllegalStateApplicationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.StartTransactionConfirmation;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.StartTransactionRequest;
@@ -25,17 +26,27 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
 
     private final IdTokenGenerator idTokenGenerator;
 
+    private final EmulationEventsListener emulationEventsListener;
+
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         Optional.of(createStartTransactionRequestFor(chargePointEmulator))
             .map((ThrowingFunction<StartTransactionRequest, StartTransactionConfirmation>)
-                request -> callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), request)
+                request -> {
+                    var response = callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), request);
+                    notifyStartTransactionSent(chargePointEmulator);
+                    return response;
+                }
             )
             .map(StartTransactionConfirmation::getTransactionId)
             .ifPresentOrElse(
                 chargePointEmulator::setCurrentTransactionId,
                 () -> {throw emptyOptionalException();}
             );
+    }
+
+    private void notifyStartTransactionSent(ChargePointEmulator chargePointEmulator) {
+        emulationEventsListener.onStartTransactionSent();
     }
 
     private StartTransactionRequest createStartTransactionRequestFor(ChargePointEmulator chargePointEmulator) {
@@ -50,7 +61,7 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
         return new StartTransactionRequest(
             DEFAULT_CONNECTOR_ID,
             idTokenGenerator.generateRandomToken(),
-            chargePointEmulator.getCurrentMeterValue(),
+            chargePointEmulator.getCurrentMeterValue().get(),
             LocalDateTime.now()
         );
     }
