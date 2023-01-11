@@ -89,14 +89,10 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
     private void startChargePointEmulators(
         List<ChargePointEmulator> chargePointEmulators, ChargePointsEmulationParameters parameters
     ) {
-        var logMultipleEmulatorStartedAction =
-            new LogMultipleEmulatorStartedAction(parameters.getConnectionCountForLogs());
-
         log.info("Starting " + chargePointEmulators.size() + " emulators");
         setupMultipleEventCounters(parameters);
 
         var bootEmulatorAndStartHeartbeatingAction = connectAction
-            .andThen(logMultipleEmulatorStartedAction)
             .andThen(sendBootNotificationAction)
             .andThen(startHeartbeatingAction);
 
