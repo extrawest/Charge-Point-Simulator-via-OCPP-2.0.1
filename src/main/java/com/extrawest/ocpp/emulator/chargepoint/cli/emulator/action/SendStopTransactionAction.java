@@ -33,7 +33,7 @@ public class SendStopTransactionAction implements Consumer<ChargePointEmulator> 
 
     private StopTransactionRequest createRequestFor(ChargePointEmulator chargePointEmulator) {
         return new StopTransactionRequest(
-            chargePointEmulator.getCurrentMeterValue(),
+            chargePointEmulator.getCurrentMeterValue().get(),
             LocalDateTime.now(),
             Optional.of(chargePointEmulator.getCurrentTransactionId())
                 .orElseThrow(() -> transactionNotStarted(chargePointEmulator))
