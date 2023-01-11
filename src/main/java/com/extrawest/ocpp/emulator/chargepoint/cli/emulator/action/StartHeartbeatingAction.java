@@ -3,6 +3,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ScheduledHeartbeatsStorage;
+import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.HeartbeatRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingRunnable;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,8 @@ public class StartHeartbeatingAction implements Consumer<ChargePointEmulator> {
 
     private final ScheduledHeartbeatsStorage scheduledHeartbeatsStorage;
 
+    private final EmulationEventsListener emulationEventsListener;
+
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         var heartbeatIntervalSeconds = Optional.ofNullable(chargePointEmulator.getHeartbeatInterval())
@@ -37,11 +40,18 @@ public class StartHeartbeatingAction implements Consumer<ChargePointEmulator> {
             .orElseThrow(() -> heartbeatNotSet(chargePointEmulator));
         var scheduledHeartbeating = scheduledExecutorService.scheduleWithFixedDelay(
             (ThrowingRunnable)
-                () -> callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), HEARTBEAT_REQUEST),
+                () -> {
+                    callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), HEARTBEAT_REQUEST);
+                    notifyHeartbeatSent();
+                },
             heartbeatIntervalSeconds,
             heartbeatIntervalSeconds,
             TimeUnit.SECONDS
         );
         scheduledHeartbeatsStorage.store(chargePointEmulator, scheduledHeartbeating);
+    }
+
+    private void notifyHeartbeatSent() {
+        emulationEventsListener.onHeartbeatSent();
     }
 }
