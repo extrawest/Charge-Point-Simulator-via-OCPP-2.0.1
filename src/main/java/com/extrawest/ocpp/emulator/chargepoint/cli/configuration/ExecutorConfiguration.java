@@ -13,7 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 @RequiredArgsConstructor
 public class ExecutorConfiguration {
 
-    @Value("${ocpp.emulation.scheduling.thread-pool.core-size:32}")
+    @Value("${ocpp.emulation.scheduling.thread-pool.core-size:48}")
     private final int scheduledExecutorServiceCorePoolSize;
 
     @Value("${ocpp.emulation.start.thread-pool.size:32}")
