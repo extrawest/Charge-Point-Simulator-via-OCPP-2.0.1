@@ -2,6 +2,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.CiString20;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationConfirmation;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationRequest;
@@ -21,13 +22,19 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
 
     private final RequestSender callsSender;
 
+    private final EmulationEventsListener emulationEventsListener;
+
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         Optional.of(createBootNotificationRequestFor(chargePointEmulator))
             .map((ThrowingFunction<BootNotificationRequest, BootNotificationConfirmation>)
-                bootNotificationRequest -> callsSender.sendRequest(
-                    chargePointEmulator.getCentralSystemClient(), bootNotificationRequest
-                )
+                bootNotificationRequest -> {
+                    var response = callsSender.sendRequest(
+                        chargePointEmulator.getCentralSystemClient(), bootNotificationRequest
+                    );
+                    notifyBootNotificationSent();
+                    return response;
+                }
             )
             .map(BootNotificationConfirmation::getInterval)
             .map(Duration::ofSeconds)
@@ -35,6 +42,10 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
                 chargePointEmulator::setHeartbeatInterval,
                 () -> {throw emptyOptionalException();}
             );
+    }
+
+    private void notifyBootNotificationSent() {
+        emulationEventsListener.onBootNotificationSent();
     }
 
     private BootNotificationRequest createBootNotificationRequestFor(ChargePointEmulator chargePointEmulator) {
