@@ -1,6 +1,7 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CentralSystemClient;
+import com.extrawest.ocpp.emulator.chargepoint.cli.event.WebsocketEventListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationConnectionException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.Call;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
@@ -43,6 +44,8 @@ public class JettyWebsocketClient implements CentralSystemClient {
     private final WebSocketClient webSocketClient;
 
     private final ClientUpgradeRequest clientUpgradeRequest;
+
+    private final WebsocketEventListener websocketEventListener;
 
     @Getter(AccessLevel.PRIVATE)
     @Setter(AccessLevel.PRIVATE)
@@ -92,6 +95,7 @@ public class JettyWebsocketClient implements CentralSystemClient {
 
     @OnWebSocketClose
     public void onWebSocketClose(int statusCode, String reason) {
+        websocketEventListener.onConnectionClosed();
         setSession(null);
     }
 
