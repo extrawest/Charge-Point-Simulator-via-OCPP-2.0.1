@@ -4,6 +4,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdTagInfo;
 import lombok.*;
 
 import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 @Setter
@@ -28,7 +29,7 @@ public class ChargePointEmulator {
 
     private IdTagInfo authorizeIdTagInfo;
 
-    private int currentMeterValue;
+    private AtomicInteger currentMeterValue;
 
     private Integer currentTransactionId;
 
