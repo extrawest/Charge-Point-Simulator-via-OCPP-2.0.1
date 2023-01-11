@@ -2,6 +2,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.CiString20;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdToken;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.AuthorizeConfirmation;
@@ -22,11 +23,17 @@ public class SendAuthorizeAction implements Consumer<ChargePointEmulator> {
 
     private final RequestSender callsSender;
 
+    private final EmulationEventsListener emulationEventsListener;
+
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         Optional.of(createAuthorizeRequestFor(chargePointEmulator))
             .map((ThrowingFunction<AuthorizeRequest, AuthorizeConfirmation>)
-                request -> callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), request)
+                request -> {
+                    var response = callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), request);
+                    notifyAuthorizeSent();
+                    return response;
+                }
             )
             .map(AuthorizeConfirmation::getIdTagInfo)
             .ifPresentOrElse(
@@ -42,5 +49,9 @@ public class SendAuthorizeAction implements Consumer<ChargePointEmulator> {
             .map(IdToken::new)
             .map(AuthorizeRequest::new)
             .get();
+    }
+
+    private void notifyAuthorizeSent() {
+        emulationEventsListener.onAuthorizeSent();
     }
 }
