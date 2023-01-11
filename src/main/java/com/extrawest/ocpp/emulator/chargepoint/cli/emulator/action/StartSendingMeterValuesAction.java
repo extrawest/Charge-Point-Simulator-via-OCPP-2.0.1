@@ -2,6 +2,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.MeterValue;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.MeterValuesRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.SampledValue;
@@ -24,14 +25,19 @@ public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulat
 
     private final ScheduledExecutorService scheduledExecutorService;
 
+    private final EmulationEventsListener emulationEventsListener;
+
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         long meterValuesSendInterval = chargePointEmulator.getSendMeterValuesInterval().toMillis();
-        scheduledExecutorService.scheduleWithFixedDelay(
-            (ThrowingRunnable) () -> callsSender.sendRequest(
-                chargePointEmulator.getCentralSystemClient(),
-                incrementMeterValuesAndCreateRequest(chargePointEmulator)
-            ),
+        scheduledExecutorService.scheduleAtFixedRate(
+            (ThrowingRunnable) () -> {
+                callsSender.sendRequest(
+                    chargePointEmulator.getCentralSystemClient(),
+                    incrementMeterValuesAndCreateRequest(chargePointEmulator)
+                );
+                notifyMeterValuesSent();
+            },
             meterValuesSendInterval,
             meterValuesSendInterval,
             TimeUnit.MILLISECONDS
@@ -53,5 +59,9 @@ public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulat
                     .build()
             )
             .build();
+    }
+
+    private void notifyMeterValuesSent() {
+        emulationEventsListener.onMeterValuesSent();
     }
 }
