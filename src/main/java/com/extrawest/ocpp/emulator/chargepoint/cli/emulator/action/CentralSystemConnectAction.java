@@ -1,7 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.event.WebsocketEventListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +14,10 @@ import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class CentralSystemConnectAction implements Consumer<ChargePointEmulator> {
+
+    private final WebsocketEventListener websocketEventListener;
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
@@ -22,7 +27,7 @@ public class CentralSystemConnectAction implements Consumer<ChargePointEmulator>
         try {
             centralSystemClient.connect(connectionUrl);
         } catch (EmulationException e) {
-            log.error(e.getMessage(), e);
+            websocketEventListener.onConnectionFailed();
             throw unchecked(e);
         }
     }
