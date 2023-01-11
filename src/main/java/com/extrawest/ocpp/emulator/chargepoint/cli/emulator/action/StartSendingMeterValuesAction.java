@@ -46,9 +46,9 @@ public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulat
 
     private MeterValuesRequest incrementMeterValuesAndCreateRequest(ChargePointEmulator chargePointEmulator) {
         int meterValueMaxIncrement = 100;
-        int incrementedMeterValue = (int)
-            (chargePointEmulator.getCurrentMeterValue() + Math.random() * meterValueMaxIncrement);
-        chargePointEmulator.setCurrentMeterValue(incrementedMeterValue);
+        int incrementedMeterValue = chargePointEmulator
+            .getCurrentMeterValue()
+            .addAndGet((int) (Math.random() * (meterValueMaxIncrement + 1)));
         return MeterValuesRequest.builder()
             .connectorId(DEFAULT_CONNECTOR_ID)
             .transactionId(chargePointEmulator.getCurrentTransactionId())
