@@ -5,6 +5,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.dto.CreateChargePointParamete
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulatorFactory;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action.*;
+import com.extrawest.ocpp.emulator.chargepoint.cli.event.ConfigurableMultipleEventHandler;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.service.ChargePointEmulatorsService;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,8 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
 
     private final StartSendingMeterValuesAction startSendingMeterValuesAction;
 
+    private final List<ConfigurableMultipleEventHandler> configurableMultipleEventHandlers;
+
     @Override
     public void startEmulation(@Valid ChargePointsEmulationParameters parameters) throws EmulationException {
         log.info("Trying to start the emulation");
@@ -90,6 +93,7 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
             new LogMultipleEmulatorStartedAction(parameters.getConnectionCountForLogs());
 
         log.info("Starting " + chargePointEmulators.size() + " emulators");
+        setupMultipleEventCounters(parameters);
 
         var bootEmulatorAndStartHeartbeatingAction = connectAction
             .andThen(logMultipleEmulatorStartedAction)
@@ -164,5 +168,13 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
 
     private String createChargePointIdForIndex(long chargePointIndex) {
         return chargePointIdIndexPrefix + chargePointIndex;
+    }
+
+    private void setupMultipleEventCounters(ChargePointsEmulationParameters parameters) {
+        configurableMultipleEventHandlers.forEach(
+            configurableMultipleEventHandler -> configurableMultipleEventHandler.setHandleMultiple(
+                parameters.getConnectionCountForLogs()
+            )
+        );
     }
 }
