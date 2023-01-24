@@ -1,6 +1,7 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.ToString;
@@ -19,7 +20,7 @@ public class CiString20 {
     private final String value;
 
     @JsonCreator
-    public CiString20(String value) {
+    public CiString20(@JsonProperty() String value) {
         ensureValueValidOrThrow(value);
         this.value = value;
     }

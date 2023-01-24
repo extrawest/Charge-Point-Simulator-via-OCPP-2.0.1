@@ -18,7 +18,7 @@ public class IdTagInfo {
     private final LocalDateTime expiryDate;
 
     @JsonProperty("parentIdTag")
-    private final IdToken parentIdTag;
+    private final String parentIdTag;
 
     @JsonProperty("status")
     @NonNull

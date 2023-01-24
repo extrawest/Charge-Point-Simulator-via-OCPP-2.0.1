@@ -1,40 +1,75 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.exception.IllegalArgumentApplicationException;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Singular;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
-import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.DATE_FORMAT;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.Builder;
+import lombok.Getter;
 
+
+/**
+ * Meter_ Value
+ * urn:x-oca:ocpp:uid:2:233265
+ * Collection of one or more sampled values in MeterValuesRequest and TransactionEvent. All sampled values in a MeterValue are sampled at the same point in time.
+ *
+ *
+ */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+        "customData",
+        "sampledValue",
+        "timestamp"
+})
 @Builder
 @Getter
 public class MeterValue {
 
-    @JsonFormat(pattern = DATE_FORMAT)
-    private final LocalDateTime timestamp;
-
-    @Singular
+    /**
+     * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
+     *
+     */
+    @JsonProperty("customData")
+    public CustomData customData;
+    /**
+     *
+     * (Required)
+     *
+     */
     @JsonProperty("sampledValue")
-    private final List<SampledValue> sampledValues;
+    public List<SampledValue> sampledValue;
+    /**
+     * Meter_ Value. Timestamp. Date_ Time
+     * urn:x-oca:ocpp:uid:1:569259
+     * Timestamp for measured value(s).
+     *
+     * (Required)
+     *
+     */
+    @JsonProperty("timestamp")
+    public LocalDateTime timestamp;
 
-    public MeterValue(LocalDateTime timestamp, List<SampledValue> sampledValues) {
-        ensureParametersValidOrThrow(timestamp, sampledValues);
-        this.timestamp = timestamp;
-        this.sampledValues = sampledValues;
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = ((result* 31)+((this.customData == null)? 0 :this.customData.hashCode()));
+        result = ((result* 31)+((this.sampledValue == null)? 0 :this.sampledValue.hashCode()));
+        result = ((result* 31)+((this.timestamp == null)? 0 :this.timestamp.hashCode()));
+        return result;
     }
 
-    private void ensureParametersValidOrThrow(LocalDateTime timestamp, List<SampledValue> sampledValues) {
-        if (timestamp == null) {
-            throw new IllegalArgumentApplicationException("Timestamp must be defined");
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
         }
-        if (sampledValues == null || sampledValues.isEmpty()) {
-            throw new IllegalArgumentApplicationException("Sampled values must contain at least one item");
+        if (!(other instanceof MeterValue rhs)) {
+            return false;
         }
+        return (((Objects.equals(this.customData, rhs.customData))&&(Objects.equals(this.sampledValue, rhs.sampledValue)))&&(Objects.equals(this.timestamp, rhs.timestamp)));
     }
+
 }
