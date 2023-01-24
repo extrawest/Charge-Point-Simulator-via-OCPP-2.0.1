@@ -3,7 +3,11 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationIOException;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.Transaction;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.TransactionEventEnum;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.TriggerReasonEnum;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.StopTransactionRequest;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.TransactionEventRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -32,12 +36,15 @@ public class SendStopTransactionAction implements Consumer<ChargePointEmulator> 
         }
     }
 
-    private StopTransactionRequest createRequestFor(ChargePointEmulator chargePointEmulator) {
-        return new StopTransactionRequest(
-            chargePointEmulator.getCurrentMeterValue().get(),
-            LocalDateTime.now(),
-            Optional.of(chargePointEmulator.getCurrentTransactionId())
-                .orElseThrow(() -> transactionNotStarted(chargePointEmulator))
-        );
+    private TransactionEventRequest createRequestFor(ChargePointEmulator chargePointEmulator) {
+        return TransactionEventRequest.builder()
+                .eventType(TransactionEventEnum.ENDED)
+                .timestamp(LocalDateTime.now())
+                .triggerReason(TriggerReasonEnum.CHARGING_STATE_CHANGED)
+                .seqNo(1)//todo
+                .transactionInfo(Transaction.builder()
+                        .transactionId(chargePointEmulator.getCurrentTransactionId().toString())
+                        .build())
+                .build();
     }
 }
