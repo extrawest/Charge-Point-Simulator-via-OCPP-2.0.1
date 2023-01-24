@@ -1,22 +1,22 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.IdTokenGenerator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.IllegalStateApplicationException;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.StartTransactionConfirmation;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.StartTransactionRequest;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.Transaction;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.TransactionEventEnum;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.TriggerReasonEnum;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.TransactionEventRequest;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.TransactionEventResponse;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
-
-import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.DEFAULT_CONNECTOR_ID;
-import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.emptyOptionalException;
 
 @RequiredArgsConstructor
 @Component
@@ -24,32 +24,26 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
 
     private final RequestSender callsSender;
 
-    private final IdTokenGenerator idTokenGenerator;
-
     private final EmulationEventsListener emulationEventsListener;
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         Optional.of(createStartTransactionRequestFor(chargePointEmulator))
-            .map((ThrowingFunction<StartTransactionRequest, StartTransactionConfirmation>)
+            .map((ThrowingFunction<TransactionEventRequest, TransactionEventResponse>)
                 request -> {
                     var response = callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), request);
                     notifyStartTransactionSent(chargePointEmulator);
                     return response;
                 }
-            )
-            .map(StartTransactionConfirmation::getTransactionId)
-            .ifPresentOrElse(
-                chargePointEmulator::setCurrentTransactionId,
-                () -> {throw emptyOptionalException();}
             );
+        chargePointEmulator.setCurrentTransactionId(UUID.randomUUID());
     }
 
     private void notifyStartTransactionSent(ChargePointEmulator chargePointEmulator) {
         emulationEventsListener.onStartTransactionSent();
     }
 
-    private StartTransactionRequest createStartTransactionRequestFor(ChargePointEmulator chargePointEmulator) {
+    private TransactionEventRequest createStartTransactionRequestFor(ChargePointEmulator chargePointEmulator) {
         var idTag = chargePointEmulator.getAuthorizeIdTagInfo();
         if (idTag == null) {
             throw new IllegalStateApplicationException("""
@@ -58,11 +52,14 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
                 and populate the emulator with the tag from the response."""
             );
         }
-        return new StartTransactionRequest(
-            DEFAULT_CONNECTOR_ID,
-            idTokenGenerator.generateRandomToken(),
-            chargePointEmulator.getCurrentMeterValue().get(),
-            LocalDateTime.now()
-        );
+        return TransactionEventRequest.builder()
+                .eventType(TransactionEventEnum.STARTED)
+                .timestamp(LocalDateTime.now())
+                .triggerReason(TriggerReasonEnum.EV_DETECTED)
+                .seqNo(1)//todo
+                .transactionInfo(Transaction.builder()
+                        .transactionId(chargePointEmulator.getCurrentTransactionId().toString())
+                        .build())
+                .build();
     }
 }
