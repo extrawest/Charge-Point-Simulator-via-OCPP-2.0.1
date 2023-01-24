@@ -3,8 +3,11 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootReasonEnum;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.ChargingStation;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.CiString20;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationConfirmation;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.Modem;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationResponse;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +30,7 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
         Optional.of(createBootNotificationRequestFor(chargePointEmulator))
-            .map((ThrowingFunction<BootNotificationRequest, BootNotificationConfirmation>)
+            .map((ThrowingFunction<BootNotificationRequest, BootNotificationResponse>)
                 bootNotificationRequest -> {
                     var response = callsSender.sendRequest(
                         chargePointEmulator.getCentralSystemClient(), bootNotificationRequest
@@ -36,7 +39,7 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
                     return response;
                 }
             )
-            .map(BootNotificationConfirmation::getInterval)
+            .map(BootNotificationResponse::getInterval)
             .map(Duration::ofSeconds)
             .ifPresentOrElse(
                 chargePointEmulator::setHeartbeatInterval,
@@ -49,9 +52,14 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
     }
 
     private BootNotificationRequest createBootNotificationRequestFor(ChargePointEmulator chargePointEmulator) {
-        return new BootNotificationRequest(
-            new CiString20(chargePointEmulator.getChargePointModel()),
-            new CiString20(chargePointEmulator.getChargePointVendor())
-        );
+        return BootNotificationRequest.builder()
+                .chargingStation(
+                        ChargingStation.builder()
+                                .vendorName(chargePointEmulator.getChargePointVendor())
+                                .modem(Modem.builder().build())
+                                .build()
+                )
+                .reason(BootReasonEnum.POWER_UP)
+                .build();
     }
 }
