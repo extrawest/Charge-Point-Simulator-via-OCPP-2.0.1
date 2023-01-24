@@ -3,9 +3,9 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.MeterValue;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.*;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.MeterValuesRequest;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.SampledValue;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.TransactionEventRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingRunnable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -44,12 +44,21 @@ public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulat
         );
     }
 
-    private MeterValuesRequest incrementMeterValuesAndCreateRequest(ChargePointEmulator chargePointEmulator) {
-        int meterValueMaxIncrement = 100;
+    private TransactionEventRequest incrementMeterValuesAndCreateRequest(ChargePointEmulator chargePointEmulator) {
+        /*int meterValueMaxIncrement = 100;
         int incrementedMeterValue = chargePointEmulator
             .getCurrentMeterValue()
-            .addAndGet((int) (Math.random() * (meterValueMaxIncrement + 1)));
-        return MeterValuesRequest.builder()
+            .addAndGet((int) (Math.random() * (meterValueMaxIncrement + 1)));*/
+        return TransactionEventRequest.builder()
+                .eventType(TransactionEventEnum.UPDATED)
+                .timestamp(LocalDateTime.now())
+                .triggerReason(TriggerReasonEnum.METER_VALUE_PERIODIC)
+                .seqNo(1)//todo
+                .transactionInfo(Transaction.builder()
+                        .transactionId("")//todo
+                        .build())
+                .build();
+        /*return MeterValuesRequest.builder()
             .connectorId(DEFAULT_CONNECTOR_ID)
             .transactionId(chargePointEmulator.getCurrentTransactionId())
             .meterValue(
@@ -58,7 +67,7 @@ public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulat
                     .sampledValue(new SampledValue(String.valueOf(incrementedMeterValue)))
                     .build()
             )
-            .build();
+            .build();*/
     }
 
     private void notifyMeterValuesSent() {
