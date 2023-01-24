@@ -12,7 +12,7 @@ public interface CallFactory {
 
     Call<StartTransactionRequest> createCallFor(StartTransactionRequest startTransactionRequest);
 
-    Call<MeterValuesRequest> createCallFor(MeterValuesRequest meterValuesRequest);
+    Call<TransactionEventRequest> createCallFor(TransactionEventRequest transactionEventRequest);
 
     Call<StopTransactionRequest> createCallFor(StopTransactionRequest stopTransactionRequest);
 }

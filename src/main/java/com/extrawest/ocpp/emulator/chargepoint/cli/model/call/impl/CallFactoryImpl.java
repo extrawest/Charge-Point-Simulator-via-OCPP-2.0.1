@@ -32,7 +32,7 @@ public class CallFactoryImpl implements CallFactory {
     }
 
     @Override
-    public Call<MeterValuesRequest> createCallFor(MeterValuesRequest meterValuesRequest) {
+    public Call<TransactionEventRequest> createCallFor(TransactionEventRequest meterValuesRequest) {
         return new Call<>(generateUniqueId(), CallAction.MeterValues, meterValuesRequest);
     }
 
