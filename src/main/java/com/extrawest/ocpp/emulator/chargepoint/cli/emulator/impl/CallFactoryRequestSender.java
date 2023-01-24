@@ -19,11 +19,11 @@ public class CallFactoryRequestSender implements RequestSender {
     private final CallFactory callFactory;
 
     @Override
-    public BootNotificationConfirmation sendRequest(
+    public BootNotificationResponse sendRequest(
         CentralSystemClient client, BootNotificationRequest request
     ) throws EmulationIOException {
         return extractPayload(
-            client.sendCall(callFactory.createCallFor(request), BootNotificationConfirmation.class)
+            client.sendCall(callFactory.createCallFor(request), BootNotificationResponse.class)
         );
     }
 
@@ -37,29 +37,29 @@ public class CallFactoryRequestSender implements RequestSender {
     }
 
     @Override
-    public AuthorizeConfirmation sendRequest(
+    public AuthorizeResponse sendRequest(
         CentralSystemClient client, AuthorizeRequest request
     ) throws EmulationIOException {
         return extractPayload(
-            client.sendCall(callFactory.createCallFor(request), AuthorizeConfirmation.class)
+            client.sendCall(callFactory.createCallFor(request), AuthorizeResponse.class)
         );
     }
 
-    @Override
-    public StartTransactionConfirmation sendRequest(
-        CentralSystemClient client, StartTransactionRequest request
+    /*@Override
+    public TransactionEventResponse sendRequest(
+        CentralSystemClient client, TransactionEventRequest request
     ) throws EmulationIOException {
         return extractPayload(
-            client.sendCall(callFactory.createCallFor(request), StartTransactionConfirmation.class)
+            client.sendCall(callFactory.createCallFor(request), TransactionEventResponse.class)
         );
-    }
+    }*/
 
     @Override
-    public MeterValuesConfirmation sendRequest(
-        CentralSystemClient client, MeterValuesRequest request
+    public TransactionEventResponse sendRequest(
+        CentralSystemClient client, TransactionEventRequest request
     ) throws EmulationIOException {
         return extractPayload(
-            client.sendCall(callFactory.createCallFor(request), MeterValuesConfirmation.class)
+            client.sendCall(callFactory.createCallFor(request), TransactionEventResponse.class)
         );
     }
 
