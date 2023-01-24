@@ -9,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(onConstructor = @__(@JsonCreator))
 @Getter
-public class AuthorizeConfirmation {
-
+public class AuthorizeResponse {
     @NonNull
     @JsonProperty("idTagInfo")
     private final IdTagInfo idTagInfo;
