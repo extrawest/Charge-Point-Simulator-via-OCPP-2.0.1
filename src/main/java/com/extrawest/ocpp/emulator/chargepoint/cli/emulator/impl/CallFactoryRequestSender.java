@@ -72,6 +72,15 @@ public class CallFactoryRequestSender implements RequestSender {
         );
     }
 
+    @Override
+    public RequestStopTransactionResponse sendRequest(
+            CentralSystemClient client, RequestStopTransactionRequest request
+    ) throws EmulationIOException {
+        return extractPayload(
+                client.sendCall(callFactory.createCallFor(request), RequestStopTransactionResponse.class)
+        );
+    }
+
     private <T> T extractPayload(CallResult<T> callResult) {
         return Optional.of(callResult)
             .map(CallResult::getPayload)
