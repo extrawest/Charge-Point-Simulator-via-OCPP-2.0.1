@@ -13,4 +13,5 @@ public interface EmulationEventsListener {
     void onMeterValuesSent();
 
     void onRequestStartTransactionSent();
+    void onRequestStopTransactionSent();
 }

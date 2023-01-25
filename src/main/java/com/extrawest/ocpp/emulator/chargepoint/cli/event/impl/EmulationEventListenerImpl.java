@@ -20,6 +20,7 @@ public class EmulationEventListenerImpl implements EmulationEventsListener, Conf
 
     private final MultipleEventCounter meterValuesSentCounter;
     private final MultipleEventCounter requestStartTransactionCounter;
+    private final MultipleEventCounter requestStopTransactionCounter;
 
     @Override
     public void onBootNotificationSent() {
@@ -73,6 +74,15 @@ public class EmulationEventListenerImpl implements EmulationEventsListener, Conf
         }
 
         log.info("RequestStartTransaction sent (total: {})", requestStartTransactionCounter.getCurrentCount());
+    }
+
+    @Override
+    public void onRequestStopTransactionSent() {
+        if (!needHandleEvent(requestStopTransactionCounter)) {
+            return;
+        }
+
+        log.info("RequestStopTransaction sent (total: {})", requestStopTransactionCounter.getCurrentCount());
     }
 
     @Override
