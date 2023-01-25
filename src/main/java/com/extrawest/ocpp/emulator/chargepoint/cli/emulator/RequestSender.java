@@ -22,4 +22,7 @@ public interface RequestSender {
 
     RequestStartTransactionResponse sendRequest(CentralSystemClient client, RequestStartTransactionRequest request)
         throws EmulationIOException;
+
+    RequestStopTransactionResponse sendRequest(CentralSystemClient client, RequestStopTransactionRequest request)
+        throws EmulationIOException;
 }
