@@ -8,5 +8,6 @@ public enum CallAction {
     StartTransaction,
     MeterValues,
     StopTransaction,
-    RequestStartTransaction
+    RequestStartTransaction,
+    RequestStopTransaction
 }

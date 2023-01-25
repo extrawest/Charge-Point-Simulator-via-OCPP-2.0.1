@@ -16,4 +16,5 @@ public interface CallFactory {
 
     Call<StopTransactionRequest> createCallFor(StopTransactionRequest stopTransactionRequest);
     Call<RequestStartTransactionRequest> createCallFor(RequestStartTransactionRequest requestStartTransactionRequest);
+    Call<RequestStopTransactionRequest> createCallFor(RequestStopTransactionRequest requestStopTransactionRequest);
 }

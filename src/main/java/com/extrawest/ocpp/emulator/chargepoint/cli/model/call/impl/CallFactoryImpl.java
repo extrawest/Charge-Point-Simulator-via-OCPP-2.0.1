@@ -46,6 +46,11 @@ public class CallFactoryImpl implements CallFactory {
         return new Call<>(generateUniqueId(), CallAction.RequestStartTransaction, requestStartTransactionRequest);
     }
 
+    @Override
+    public Call<RequestStopTransactionRequest> createCallFor(RequestStopTransactionRequest requestStopTransactionRequest) {
+        return new Call<>(generateUniqueId(), CallAction.RequestStopTransaction, requestStopTransactionRequest);
+    }
+
     private String generateUniqueId() {
         return UUID.randomUUID().toString();
     }
