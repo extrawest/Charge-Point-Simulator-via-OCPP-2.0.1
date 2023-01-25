@@ -45,15 +45,6 @@ public class CallFactoryRequestSender implements RequestSender {
         );
     }
 
-    /*@Override
-    public TransactionEventResponse sendRequest(
-        CentralSystemClient client, TransactionEventRequest request
-    ) throws EmulationIOException {
-        return extractPayload(
-            client.sendCall(callFactory.createCallFor(request), TransactionEventResponse.class)
-        );
-    }*/
-
     @Override
     public TransactionEventResponse sendRequest(
         CentralSystemClient client, TransactionEventRequest request
@@ -69,6 +60,15 @@ public class CallFactoryRequestSender implements RequestSender {
     ) throws EmulationIOException {
         return extractPayload(
             client.sendCall(callFactory.createCallFor(request), StopTransactionConfirmation.class)
+        );
+    }
+
+    @Override
+    public RequestStartTransactionResponse sendRequest(
+            CentralSystemClient client, RequestStartTransactionRequest request
+    ) throws EmulationIOException {
+        return extractPayload(
+                client.sendCall(callFactory.createCallFor(request), RequestStartTransactionResponse.class)
         );
     }
 

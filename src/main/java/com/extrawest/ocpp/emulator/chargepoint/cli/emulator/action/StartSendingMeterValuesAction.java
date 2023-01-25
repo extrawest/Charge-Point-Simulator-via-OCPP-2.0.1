@@ -4,7 +4,6 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.*;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.MeterValuesRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.TransactionEventRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingRunnable;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +13,6 @@ import java.time.LocalDateTime;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-
-import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.DEFAULT_CONNECTOR_ID;
 
 @RequiredArgsConstructor
 @Component
@@ -34,7 +31,7 @@ public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulat
             (ThrowingRunnable) () -> {
                 callsSender.sendRequest(
                     chargePointEmulator.getCentralSystemClient(),
-                    incrementMeterValuesAndCreateRequest(chargePointEmulator)
+                    createTransactionEventRequest(chargePointEmulator)
                 );
                 notifyMeterValuesSent();
             },
@@ -44,11 +41,7 @@ public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulat
         );
     }
 
-    private TransactionEventRequest incrementMeterValuesAndCreateRequest(ChargePointEmulator chargePointEmulator) {
-        /*int meterValueMaxIncrement = 100;
-        int incrementedMeterValue = chargePointEmulator
-            .getCurrentMeterValue()
-            .addAndGet((int) (Math.random() * (meterValueMaxIncrement + 1)));*/
+    private TransactionEventRequest createTransactionEventRequest(ChargePointEmulator chargePointEmulator) {
         return TransactionEventRequest.builder()
                 .eventType(TransactionEventEnum.UPDATED)
                 .timestamp(LocalDateTime.now())
@@ -58,16 +51,6 @@ public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulat
                         .transactionId("")//todo
                         .build())
                 .build();
-        /*return MeterValuesRequest.builder()
-            .connectorId(DEFAULT_CONNECTOR_ID)
-            .transactionId(chargePointEmulator.getCurrentTransactionId())
-            .meterValue(
-                MeterValue.builder()
-                    .timestamp(LocalDateTime.now())
-                    .sampledValue(new SampledValue(String.valueOf(incrementedMeterValue)))
-                    .build()
-            )
-            .build();*/
     }
 
     private void notifyMeterValuesSent() {

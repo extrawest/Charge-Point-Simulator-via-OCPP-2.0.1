@@ -43,13 +43,7 @@ public class SendAuthorizeAction implements Consumer<ChargePointEmulator> {
     }
 
     private AuthorizeRequest createAuthorizeRequestFor(ChargePointEmulator chargePointEmulator) {
-        return new AuthorizeRequest(IdToken.builder().idToken(new UUID(1L, 10L).toString()).build());
-        /*return Optional.of(chargePointEmulator.getChargePointId())
-            .map(string -> string.substring(0, min(string.length(), CiString20.VALUE_MAX_LENGTH)))
-            .map(CiString20::new)
-            .map(IdToken::new)
-            .map(AuthorizeRequest::new)
-            .get();*/
+        return new AuthorizeRequest(IdToken.builder().idToken(UUID.randomUUID().toString()).build());
     }
 
     private void notifyAuthorizeSent() {
