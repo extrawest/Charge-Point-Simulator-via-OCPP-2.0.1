@@ -19,6 +19,7 @@ public class EmulationEventListenerImpl implements EmulationEventsListener, Conf
     private final MultipleEventCounter startTransactionSentCounter;
 
     private final MultipleEventCounter meterValuesSentCounter;
+    private final MultipleEventCounter requestStartTransactionCounter;
 
     @Override
     public void onBootNotificationSent() {
@@ -66,12 +67,22 @@ public class EmulationEventListenerImpl implements EmulationEventsListener, Conf
     }
 
     @Override
+    public void onRequestStartTransactionSent() {
+        if (!needHandleEvent(requestStartTransactionCounter)) {
+            return;
+        }
+
+        log.info("RequestStartTransaction sent (total: {})", requestStartTransactionCounter.getCurrentCount());
+    }
+
+    @Override
     public void setHandleMultiple(int handleMultiple) {
         bootNotificationSentCounter.setMultiple(handleMultiple);
         heartbeatSentCounter.setMultiple(handleMultiple);
         authorizeSentCounter.setMultiple(handleMultiple);
         startTransactionSentCounter.setMultiple(handleMultiple);
         meterValuesSentCounter.setMultiple(handleMultiple);
+        requestStartTransactionCounter.setMultiple(handleMultiple);
     }
 
     private boolean needHandleEvent(MultipleEventCounter eventCounter) {
