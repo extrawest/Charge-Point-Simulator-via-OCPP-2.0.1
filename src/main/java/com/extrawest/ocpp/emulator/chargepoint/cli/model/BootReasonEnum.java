@@ -2,7 +2,6 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Generated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -12,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
  *
  *
  */
-@Generated("jsonschema2pojo")
 public enum BootReasonEnum {
 
     APPLICATION_RESET("ApplicationReset"),
