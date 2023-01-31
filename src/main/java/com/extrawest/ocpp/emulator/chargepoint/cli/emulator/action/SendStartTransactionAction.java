@@ -28,6 +28,7 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
+        chargePointEmulator.setCurrentTransactionId(UUID.randomUUID());
         Optional.of(createStartTransactionRequestFor(chargePointEmulator))
             .map((ThrowingFunction<TransactionEventRequest, TransactionEventResponse>)
                 request -> {
@@ -36,7 +37,6 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
                     return response;
                 }
             );
-        chargePointEmulator.setCurrentTransactionId(UUID.randomUUID());
     }
 
     private void notifyStartTransactionSent(ChargePointEmulator chargePointEmulator) {
@@ -44,7 +44,7 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
     }
 
     private TransactionEventRequest createStartTransactionRequestFor(ChargePointEmulator chargePointEmulator) {
-        var idTag = chargePointEmulator.getAuthorizeIdTagInfo();
+        var idTag = chargePointEmulator.getIdTokenInfo();
         if (idTag == null) {
             throw new IllegalStateApplicationException("""
                 The charge point does not have idTag set. \
