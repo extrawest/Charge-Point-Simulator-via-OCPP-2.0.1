@@ -1,14 +1,13 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.action;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
+import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.BootReasonEnum;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.ChargingStation;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.CiString20;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.Modem;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationResponse;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationRequest;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationResponse;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -57,6 +56,7 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
                         ChargingStation.builder()
                                 .vendorName(chargePointEmulator.getChargePointVendor())
                                 .modem(Modem.builder().build())
+                                .model("model")//todo
                                 .build()
                 )
                 .reason(BootReasonEnum.POWER_UP)
