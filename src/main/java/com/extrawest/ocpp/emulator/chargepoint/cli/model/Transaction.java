@@ -27,6 +27,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 @Getter
+@ToString
 public class Transaction {
 
     /**
