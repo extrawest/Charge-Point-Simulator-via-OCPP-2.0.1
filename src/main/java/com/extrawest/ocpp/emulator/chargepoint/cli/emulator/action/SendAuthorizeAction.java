@@ -4,6 +4,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdToken;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdTokenEnum;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.AuthorizeResponse;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.AuthorizeRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil;
@@ -35,15 +36,20 @@ public class SendAuthorizeAction implements Consumer<ChargePointEmulator> {
                     return response;
                 }
             )
-            .map(AuthorizeResponse::getIdTagInfo)
+            .map(AuthorizeResponse::getIdTokenInfo)
             .ifPresentOrElse(
-                chargePointEmulator::setAuthorizeIdTagInfo,
+                chargePointEmulator::setIdTokenInfo,
                 () -> {throw ThrowReadablyUtil.emptyOptionalException();}
             );
     }
 
     private AuthorizeRequest createAuthorizeRequestFor(ChargePointEmulator chargePointEmulator) {
-        return new AuthorizeRequest(IdToken.builder().idToken(UUID.randomUUID().toString()).build());
+        return AuthorizeRequest.builder()
+                .idToken(IdToken.builder()
+                        .idToken(UUID.randomUUID().toString())
+                        .type(IdTokenEnum.MAC_ADDRESS)
+                        .build())
+                .build();
     }
 
     private void notifyAuthorizeSent() {
