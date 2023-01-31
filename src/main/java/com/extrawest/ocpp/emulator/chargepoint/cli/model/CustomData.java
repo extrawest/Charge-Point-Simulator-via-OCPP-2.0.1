@@ -17,7 +17,6 @@ import lombok.Getter;
 @JsonPropertyOrder({
         "vendorId"
 })
-@Builder
 @Getter
 public class CustomData {
 
