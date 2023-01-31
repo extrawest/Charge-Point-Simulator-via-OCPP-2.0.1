@@ -4,6 +4,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdToken;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdTokenEnum;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.RequestStartTransactionRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.RequestStartTransactionResponse;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
@@ -40,6 +41,7 @@ public class SendRequestStartTransactionAction implements Consumer<ChargePointEm
                 .remoteStartId(1)//todo
                 .idToken(IdToken.builder()
                         .idToken(UUID.randomUUID().toString())
+                        .type(IdTokenEnum.MAC_ADDRESS)
                         .build())
                 .build();
     }
