@@ -1,6 +1,5 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.emulator;
 
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdTagInfo;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdTokenInfo;
 import lombok.*;
 
@@ -29,12 +28,11 @@ public class ChargePointEmulator {
 
     private Duration heartbeatInterval;
 
-    private IdTagInfo authorizeIdTagInfo;
-
     private AtomicInteger currentMeterValue;
 
     private UUID currentTransactionId;
 
     private Duration sendMeterValuesInterval;
+
     private IdTokenInfo idTokenInfo;
 }
