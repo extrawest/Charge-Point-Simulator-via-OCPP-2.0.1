@@ -51,6 +51,8 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
     private final SendStartTransactionAction sendStartTransactionAction;
 
     private final StartSendingMeterValuesAction startSendingMeterValuesAction;
+    private final SendRequestStartTransactionAction sendRequestStartTransactionAction;
+    private final SendRequestStopTransactionAction sendRequestStopTransactionAction;
 
     private final List<ConfigurableMultipleEventHandler> configurableMultipleEventHandlers;
 
@@ -93,13 +95,15 @@ public class ChargePointEmulatorsServiceImpl implements ChargePointEmulatorsServ
         setupMultipleEventCounters(parameters);
 
         var bootEmulatorAndStartHeartbeatingAction = connectAction
-            .andThen(sendBootNotificationAction)
-            .andThen(startHeartbeatingAction);
+                .andThen(sendBootNotificationAction)
+                .andThen(startHeartbeatingAction);
 
         var stopHeartbeatingAndStartTransactionAction = stopHeartbeatingAction
-            .andThen(sendAuthorizeAction)
-            .andThen(sendStartTransactionAction)
-            .andThen(startSendingMeterValuesAction);
+                .andThen(sendAuthorizeAction)
+                .andThen(sendRequestStartTransactionAction)
+                .andThen(sendStartTransactionAction)
+                .andThen(startSendingMeterValuesAction)
+                .andThen(sendRequestStopTransactionAction);
 
         switch (parameters.getChargePointsStartMode()) {
             case PARALLEL -> startChargePointEmulatorsParallel(
