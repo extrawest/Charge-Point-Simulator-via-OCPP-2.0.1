@@ -10,11 +10,10 @@ public interface CallFactory {
 
     Call<AuthorizeRequest> createCallFor(AuthorizeRequest authorizeRequest);
 
-    Call<StartTransactionRequest> createCallFor(StartTransactionRequest startTransactionRequest);
 
     Call<TransactionEventRequest> createCallFor(TransactionEventRequest transactionEventRequest);
 
-    Call<StopTransactionRequest> createCallFor(StopTransactionRequest stopTransactionRequest);
     Call<RequestStartTransactionRequest> createCallFor(RequestStartTransactionRequest requestStartTransactionRequest);
+
     Call<RequestStopTransactionRequest> createCallFor(RequestStopTransactionRequest requestStopTransactionRequest);
 }
