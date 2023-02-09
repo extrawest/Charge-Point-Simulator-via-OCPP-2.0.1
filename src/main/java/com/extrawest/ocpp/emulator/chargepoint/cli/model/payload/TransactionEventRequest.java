@@ -5,12 +5,15 @@ import java.util.List;
 import java.util.Objects;
 
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.DATE_FORMAT;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -57,6 +60,7 @@ public class TransactionEventRequest {
      *
      */
     @JsonProperty("timestamp")
+    @JsonFormat(pattern = DATE_FORMAT)
     public LocalDateTime timestamp;
     /**
      * Reason the Charging Station sends this message to the CSMS
