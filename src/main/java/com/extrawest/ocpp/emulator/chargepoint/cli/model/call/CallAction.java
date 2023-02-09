@@ -5,9 +5,7 @@ public enum CallAction {
     Authorize,
     BootNotification,
     Heartbeat,
-    StartTransaction,
-    MeterValues,
-    StopTransaction,
+    TransactionEvent,
     RequestStartTransaction,
     RequestStopTransaction
 }
