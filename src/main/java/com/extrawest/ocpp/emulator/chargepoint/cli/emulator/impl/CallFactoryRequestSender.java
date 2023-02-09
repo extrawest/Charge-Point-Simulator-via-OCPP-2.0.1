@@ -3,6 +3,8 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.emulator.impl;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.CentralSystemClient;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationIOException;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.TransactionEventEnum;
+import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallAction;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallFactory;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.call.CallResult;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.*;
@@ -50,16 +52,7 @@ public class CallFactoryRequestSender implements RequestSender {
         CentralSystemClient client, TransactionEventRequest request
     ) throws EmulationIOException {
         return extractPayload(
-            client.sendCall(callFactory.createCallFor(request), TransactionEventResponse.class)
-        );
-    }
-
-    @Override
-    public StopTransactionConfirmation sendRequest(
-        CentralSystemClient client, StopTransactionRequest request
-    ) throws EmulationIOException {
-        return extractPayload(
-            client.sendCall(callFactory.createCallFor(request), StopTransactionConfirmation.class)
+                client.sendCall(callFactory.createCallFor(request), TransactionEventResponse.class)
         );
     }
 
