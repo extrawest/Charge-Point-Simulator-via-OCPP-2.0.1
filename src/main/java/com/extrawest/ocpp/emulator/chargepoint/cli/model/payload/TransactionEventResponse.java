@@ -6,7 +6,6 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.model.MessageContent;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Objects;
@@ -19,7 +18,6 @@ import java.util.Objects;
         "idTokenInfo",
         "updatedPersonalMessage"
 })
-@Builder
 @Getter
 public class TransactionEventResponse {
 
