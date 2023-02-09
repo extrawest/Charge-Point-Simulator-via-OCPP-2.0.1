@@ -6,17 +6,14 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationI
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.Transaction;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.TransactionEventEnum;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.TriggerReasonEnum;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.StopTransactionRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.TransactionEventRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.transactionNotStarted;
 import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.unchecked;
 
 @Component
