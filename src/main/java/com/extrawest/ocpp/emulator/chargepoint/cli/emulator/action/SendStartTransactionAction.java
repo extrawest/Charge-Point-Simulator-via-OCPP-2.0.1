@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
@@ -25,6 +26,8 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
     private final RequestSender callsSender;
 
     private final EmulationEventsListener emulationEventsListener;
+
+    private final AtomicInteger seq = new AtomicInteger();
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
@@ -56,7 +59,7 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
                 .eventType(TransactionEventEnum.STARTED)
                 .timestamp(LocalDateTime.now())
                 .triggerReason(TriggerReasonEnum.EV_DETECTED)
-                .seqNo(1)//todo
+                .seqNo(seq.incrementAndGet())
                 .transactionInfo(Transaction.builder()
                         .transactionId(chargePointEmulator.getCurrentTransactionId().toString())
                         .build())

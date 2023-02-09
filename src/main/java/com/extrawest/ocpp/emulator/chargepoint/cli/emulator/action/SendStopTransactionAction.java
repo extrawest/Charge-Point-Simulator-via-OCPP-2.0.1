@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.transactionNotStarted;
@@ -23,6 +24,8 @@ import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil
 public class SendStopTransactionAction implements Consumer<ChargePointEmulator> {
 
     private final RequestSender requestSender;
+
+    private final AtomicInteger seq = new AtomicInteger();
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
@@ -41,7 +44,7 @@ public class SendStopTransactionAction implements Consumer<ChargePointEmulator> 
                 .eventType(TransactionEventEnum.ENDED)
                 .timestamp(LocalDateTime.now())
                 .triggerReason(TriggerReasonEnum.CHARGING_STATE_CHANGED)
-                .seqNo(1)//todo
+                .seqNo(seq.incrementAndGet())
                 .transactionInfo(Transaction.builder()
                         .transactionId(chargePointEmulator.getCurrentTransactionId().toString())
                         .build())

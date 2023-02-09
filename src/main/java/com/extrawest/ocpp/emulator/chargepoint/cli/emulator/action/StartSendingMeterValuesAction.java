@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulat
     private final ScheduledExecutorService scheduledExecutorService;
 
     private final EmulationEventsListener emulationEventsListener;
+    private final AtomicInteger seq = new AtomicInteger();
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
@@ -46,9 +48,9 @@ public class StartSendingMeterValuesAction implements Consumer<ChargePointEmulat
                 .eventType(TransactionEventEnum.UPDATED)
                 .timestamp(LocalDateTime.now())
                 .triggerReason(TriggerReasonEnum.METER_VALUE_PERIODIC)
-                .seqNo(1)//todo
+                .seqNo(seq.incrementAndGet())
                 .transactionInfo(Transaction.builder()
-                        .transactionId("")//todo
+                        .transactionId(chargePointEmulator.getCurrentTransactionId().toString())
                         .build())
                 .build();
     }
