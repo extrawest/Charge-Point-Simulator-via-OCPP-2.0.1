@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.CHARGE_POINT_TEST_MODEL;
 import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.emptyOptionalException;
 
 @RequiredArgsConstructor
@@ -56,7 +57,7 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
                         ChargingStation.builder()
                                 .vendorName(chargePointEmulator.getChargePointVendor())
                                 .modem(Modem.builder().build())
-                                .model("model")//todo
+                                .model(CHARGE_POINT_TEST_MODEL)
                                 .build()
                 )
                 .reason(BootReasonEnum.POWER_UP)
