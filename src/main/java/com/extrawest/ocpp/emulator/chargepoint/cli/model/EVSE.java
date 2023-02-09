@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-import java.util.Objects;
 
 
 /**
@@ -24,6 +23,7 @@ import java.util.Objects;
 })
 @Builder
 @Getter
+@EqualsAndHashCode
 public class EVSE {
 
     /**
@@ -49,25 +49,5 @@ public class EVSE {
      */
     @JsonProperty("connectorId")
     public Integer connectorId;
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.customData == null)? 0 :this.customData.hashCode()));
-        result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
-        result = ((result* 31)+((this.connectorId == null)? 0 :this.connectorId.hashCode()));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if (!(other instanceof EVSE rhs)) {
-            return false;
-        }
-        return (((Objects.equals(this.customData, rhs.customData))&&(Objects.equals(this.id, rhs.id)))&&(Objects.equals(this.connectorId, rhs.connectorId)));
-    }
 
 }

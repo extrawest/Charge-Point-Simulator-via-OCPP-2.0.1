@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 
@@ -18,6 +19,7 @@ import lombok.Getter;
         "vendorId"
 })
 @Getter
+@EqualsAndHashCode
 public class CustomData {
 
     /**
@@ -30,22 +32,4 @@ public class CustomData {
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<>();
 
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.vendorId == null)? 0 :this.vendorId.hashCode()));
-        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if (!(other instanceof CustomData rhs)) {
-            return false;
-        }
-        return ((Objects.equals(this.vendorId, rhs.vendorId))&&(Objects.equals(this.additionalProperties, rhs.additionalProperties)));
-    }
 }

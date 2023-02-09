@@ -1,14 +1,14 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -33,6 +33,7 @@ import lombok.Getter;
 })
 @Builder
 @Getter
+@EqualsAndHashCode
 public class IdTokenInfo {
 
     /**
@@ -111,31 +112,5 @@ public class IdTokenInfo {
      */
     @JsonProperty("personalMessage")
     public MessageContent personalMessage;
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.evseId == null)? 0 :this.evseId.hashCode()));
-        result = ((result* 31)+((this.language2 == null)? 0 :this.language2 .hashCode()));
-        result = ((result* 31)+((this.language1 == null)? 0 :this.language1 .hashCode()));
-        result = ((result* 31)+((this.cacheExpiryDateTime == null)? 0 :this.cacheExpiryDateTime.hashCode()));
-        result = ((result* 31)+((this.customData == null)? 0 :this.customData.hashCode()));
-        result = ((result* 31)+((this.chargingPriority == null)? 0 :this.chargingPriority.hashCode()));
-        result = ((result* 31)+((this.personalMessage == null)? 0 :this.personalMessage.hashCode()));
-        result = ((result* 31)+((this.groupIdToken == null)? 0 :this.groupIdToken.hashCode()));
-        result = ((result* 31)+((this.status == null)? 0 :this.status.hashCode()));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if (!(other instanceof IdTokenInfo rhs)) {
-            return false;
-        }
-        return (((((((((Objects.equals(this.evseId, rhs.evseId))&&(Objects.equals(this.language2, rhs.language2)))&&(Objects.equals(this.language1, rhs.language1)))&&(Objects.equals(this.cacheExpiryDateTime, rhs.cacheExpiryDateTime)))&&(Objects.equals(this.customData, rhs.customData)))&&(Objects.equals(this.chargingPriority, rhs.chargingPriority)))&&(Objects.equals(this.personalMessage, rhs.personalMessage)))&&(Objects.equals(this.groupIdToken, rhs.groupIdToken)))&&(Objects.equals(this.status, rhs.status)));
-    }
 
 }

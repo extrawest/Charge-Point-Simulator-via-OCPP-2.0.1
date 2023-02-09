@@ -3,8 +3,7 @@ package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 
 
 /**
@@ -27,6 +26,7 @@ import java.util.Objects;
         "signedMeterValue",
         "unitOfMeasure"
 })
+@EqualsAndHashCode
 public class SampledValue {
 
     /**
@@ -97,30 +97,5 @@ public class SampledValue {
      */
     @JsonProperty("unitOfMeasure")
     public UnitOfMeasure unitOfMeasure;
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.phase == null)? 0 :this.phase.hashCode()));
-        result = ((result* 31)+((this.signedMeterValue == null)? 0 :this.signedMeterValue.hashCode()));
-        result = ((result* 31)+((this.unitOfMeasure == null)? 0 :this.unitOfMeasure.hashCode()));
-        result = ((result* 31)+((this.context == null)? 0 :this.context.hashCode()));
-        result = ((result* 31)+((this.measurand == null)? 0 :this.measurand.hashCode()));
-        result = ((result* 31)+((this.customData == null)? 0 :this.customData.hashCode()));
-        result = ((result* 31)+((this.location == null)? 0 :this.location.hashCode()));
-        result = ((result* 31)+((this.value == null)? 0 :this.value.hashCode()));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if (!(other instanceof SampledValue rhs)) {
-            return false;
-        }
-        return Objects.equals(this.phase, rhs.phase) && Objects.equals(this.signedMeterValue, rhs.signedMeterValue) && Objects.equals(this.unitOfMeasure, rhs.unitOfMeasure) && Objects.equals(this.context, rhs.context) && this.measurand == rhs.measurand && (Objects.equals(this.customData, rhs.customData)) && (Objects.equals(this.location, rhs.location)) && (Objects.equals(this.value, rhs.value));
-    }
 
 }

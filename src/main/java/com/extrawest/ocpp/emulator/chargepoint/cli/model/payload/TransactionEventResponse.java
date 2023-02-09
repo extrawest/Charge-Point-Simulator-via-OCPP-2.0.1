@@ -6,9 +6,8 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.model.MessageContent;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -19,6 +18,7 @@ import java.util.Objects;
         "updatedPersonalMessage"
 })
 @Getter
+@EqualsAndHashCode
 public class TransactionEventResponse {
 
     /**
@@ -62,27 +62,5 @@ public class TransactionEventResponse {
      */
     @JsonProperty("updatedPersonalMessage")
     public MessageContent updatedPersonalMessage;
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.customData == null)? 0 :this.customData.hashCode()));
-        result = ((result* 31)+((this.chargingPriority == null)? 0 :this.chargingPriority.hashCode()));
-        result = ((result* 31)+((this.idTokenInfo == null)? 0 :this.idTokenInfo.hashCode()));
-        result = ((result* 31)+((this.totalCost == null)? 0 :this.totalCost.hashCode()));
-        result = ((result* 31)+((this.updatedPersonalMessage == null)? 0 :this.updatedPersonalMessage.hashCode()));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if (!(other instanceof TransactionEventResponse rhs)) {
-            return false;
-        }
-        return (((((Objects.equals(this.customData, rhs.customData))&&(Objects.equals(this.chargingPriority, rhs.chargingPriority)))&&(Objects.equals(this.idTokenInfo, rhs.idTokenInfo)))&&(Objects.equals(this.totalCost, rhs.totalCost)))&&(Objects.equals(this.updatedPersonalMessage, rhs.updatedPersonalMessage)));
-    }
 
 }

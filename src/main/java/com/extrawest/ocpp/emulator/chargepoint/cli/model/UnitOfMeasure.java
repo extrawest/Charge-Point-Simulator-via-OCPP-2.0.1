@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-import java.util.Objects;
 
 
 /**
@@ -22,6 +21,7 @@ import java.util.Objects;
 })
 @Builder
 @Getter
+@EqualsAndHashCode
 public class UnitOfMeasure {
 
     /**
@@ -47,23 +47,4 @@ public class UnitOfMeasure {
     @JsonProperty("multiplier")
     public Integer multiplier = 0;
 
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.customData == null)? 0 :this.customData.hashCode()));
-        result = ((result* 31)+((this.unit == null)? 0 :this.unit.hashCode()));
-        result = ((result* 31)+((this.multiplier == null)? 0 :this.multiplier.hashCode()));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if (!(other instanceof UnitOfMeasure rhs)) {
-            return false;
-        }
-        return (((Objects.equals(this.customData, rhs.customData))&&(Objects.equals(this.unit, rhs.unit)))&&(Objects.equals(this.multiplier, rhs.multiplier)));
-    }
 }

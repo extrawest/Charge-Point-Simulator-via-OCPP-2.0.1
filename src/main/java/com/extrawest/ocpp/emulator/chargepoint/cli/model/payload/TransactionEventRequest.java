@@ -1,17 +1,17 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model.payload;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.DATE_FORMAT;
 
@@ -34,6 +34,7 @@ import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstant
 @Getter
 @Builder
 @ToString
+@EqualsAndHashCode
 public class TransactionEventRequest {
 
     /**
@@ -132,33 +133,4 @@ public class TransactionEventRequest {
     @JsonProperty("idToken")
     public IdToken idToken;
 
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.seqNo == null)? 0 :this.seqNo.hashCode()));
-        result = ((result* 31)+((this.customData == null)? 0 :this.customData.hashCode()));
-        result = ((result* 31)+((this.eventType == null)? 0 :this.eventType.hashCode()));
-        result = ((result* 31)+((this.evse == null)? 0 :this.evse.hashCode()));
-        result = ((result* 31)+((this.transactionInfo == null)? 0 :this.transactionInfo.hashCode()));
-        result = ((result* 31)+((this.offline == null)? 0 :this.offline.hashCode()));
-        result = ((result* 31)+((this.reservationId == null)? 0 :this.reservationId.hashCode()));
-        result = ((result* 31)+((this.triggerReason == null)? 0 :this.triggerReason.hashCode()));
-        result = ((result* 31)+((this.idToken == null)? 0 :this.idToken.hashCode()));
-        result = ((result* 31)+((this.meterValue == null)? 0 :this.meterValue.hashCode()));
-        result = ((result* 31)+((this.cableMaxCurrent == null)? 0 :this.cableMaxCurrent.hashCode()));
-        result = ((result* 31)+((this.numberOfPhasesUsed == null)? 0 :this.numberOfPhasesUsed.hashCode()));
-        result = ((result* 31)+((this.timestamp == null)? 0 :this.timestamp.hashCode()));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if (!(other instanceof TransactionEventRequest rhs)) {
-            return false;
-        }
-        return (((((((((((((Objects.equals(this.seqNo, rhs.seqNo))&&(Objects.equals(this.customData, rhs.customData)))&&(Objects.equals(this.eventType, rhs.eventType)))&&(Objects.equals(this.evse, rhs.evse)))&&(Objects.equals(this.transactionInfo, rhs.transactionInfo)))&&(Objects.equals(this.offline, rhs.offline)))&&(Objects.equals(this.reservationId, rhs.reservationId)))&&(Objects.equals(this.triggerReason, rhs.triggerReason)))&&(Objects.equals(this.idToken, rhs.idToken)))&&(Objects.equals(this.meterValue, rhs.meterValue)))&&(Objects.equals(this.cableMaxCurrent, rhs.cableMaxCurrent)))&&(Objects.equals(this.numberOfPhasesUsed, rhs.numberOfPhasesUsed)))&&(Objects.equals(this.timestamp, rhs.timestamp)));
-    }
 }

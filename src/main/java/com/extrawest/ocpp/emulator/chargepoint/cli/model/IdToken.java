@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 
@@ -24,6 +25,7 @@ import lombok.Getter;
 })
 @Builder
 @Getter
+@EqualsAndHashCode
 public class IdToken {
 
     /**
@@ -50,26 +52,5 @@ public class IdToken {
      */
     @JsonProperty("type")
     public IdTokenEnum type;
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.additionalInfo == null)? 0 :this.additionalInfo.hashCode()));
-        result = ((result* 31)+((this.idToken == null)? 0 :this.idToken.hashCode()));
-        result = ((result* 31)+((this.customData == null)? 0 :this.customData.hashCode()));
-        result = ((result* 31)+((this.type == null)? 0 :this.type.hashCode()));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if (!(other instanceof IdToken rhs)) {
-            return false;
-        }
-        return Objects.equals(this.additionalInfo, rhs.additionalInfo) && Objects.equals(this.idToken, rhs.idToken) && Objects.equals(this.customData, rhs.customData) && this.type == rhs.type;
-    }
 
 }

@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 
-import java.util.Objects;
-
 
 /**
  * Transaction
@@ -28,6 +26,7 @@ import java.util.Objects;
 @Builder
 @Getter
 @ToString
+@EqualsAndHashCode
 public class Transaction {
 
     /**
@@ -79,28 +78,5 @@ public class Transaction {
      */
     @JsonProperty("remoteStartId")
     public Integer remoteStartId;
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.remoteStartId == null)? 0 :this.remoteStartId.hashCode()));
-        result = ((result* 31)+((this.stoppedReason == null)? 0 :this.stoppedReason.hashCode()));
-        result = ((result* 31)+((this.customData == null)? 0 :this.customData.hashCode()));
-        result = ((result* 31)+((this.transactionId == null)? 0 :this.transactionId.hashCode()));
-        result = ((result* 31)+((this.timeSpentCharging == null)? 0 :this.timeSpentCharging.hashCode()));
-        result = ((result* 31)+((this.chargingState == null)? 0 :this.chargingState.hashCode()));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if (!(other instanceof Transaction rhs)) {
-            return false;
-        }
-        return ((((((Objects.equals(this.remoteStartId, rhs.remoteStartId))&&(Objects.equals(this.stoppedReason, rhs.stoppedReason)))&&(Objects.equals(this.customData, rhs.customData)))&&(Objects.equals(this.transactionId, rhs.transactionId)))&&(Objects.equals(this.timeSpentCharging, rhs.timeSpentCharging)))&&(Objects.equals(this.chargingState, rhs.chargingState)));
-    }
 
 }
