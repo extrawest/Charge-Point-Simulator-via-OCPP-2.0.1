@@ -16,10 +16,4 @@ public interface RequestSender {
 
     TransactionEventResponse sendRequest(CentralSystemClient client, TransactionEventRequest request)
         throws EmulationIOException;
-
-    RequestStartTransactionResponse sendRequest(CentralSystemClient client, RequestStartTransactionRequest request)
-        throws EmulationIOException;
-
-    RequestStopTransactionResponse sendRequest(CentralSystemClient client, RequestStopTransactionRequest request)
-        throws EmulationIOException;
 }
