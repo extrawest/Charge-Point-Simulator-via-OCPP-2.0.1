@@ -27,18 +27,8 @@ public class CallFactoryImpl implements CallFactory {
     }
 
     @Override
-    public Call<StartTransactionRequest> createCallFor(StartTransactionRequest startTransactionRequest) {
-        return new Call<>(generateUniqueId(), CallAction.StartTransaction, startTransactionRequest);
-    }
-
-    @Override
-    public Call<TransactionEventRequest> createCallFor(TransactionEventRequest meterValuesRequest) {
-        return new Call<>(generateUniqueId(), CallAction.MeterValues, meterValuesRequest);
-    }
-
-    @Override
-    public Call<StopTransactionRequest> createCallFor(StopTransactionRequest stopTransactionRequest) {
-        return new Call<>(generateUniqueId(), CallAction.StopTransaction, stopTransactionRequest);
+    public Call<TransactionEventRequest> createCallFor(TransactionEventRequest transactionEventRequest) {
+        return new Call<>(generateUniqueId(), CallAction.TransactionEvent, transactionEventRequest);
     }
 
     @Override
