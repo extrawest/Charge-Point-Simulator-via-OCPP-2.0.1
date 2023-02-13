@@ -10,13 +10,13 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificatio
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationResponse;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static com.extrawest.ocpp.emulator.chargepoint.cli.constant.ModelConstants.CHARGE_POINT_TEST_MODEL;
 import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.emptyOptionalException;
 
 @RequiredArgsConstructor
@@ -26,6 +26,8 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
     private final RequestSender callsSender;
 
     private final EmulationEventsListener emulationEventsListener;
+    @Value("${ocpp.charge-point.boot-notification.chargePointModel}")
+    private String model;
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
@@ -57,7 +59,7 @@ public class SendBootNotificationAction implements Consumer<ChargePointEmulator>
                         ChargingStation.builder()
                                 .vendorName(chargePointEmulator.getChargePointVendor())
                                 .modem(Modem.builder().build())
-                                .model(CHARGE_POINT_TEST_MODEL)
+                                .model(model)
                                 .build()
                 )
                 .reason(BootReasonEnum.POWER_UP)
