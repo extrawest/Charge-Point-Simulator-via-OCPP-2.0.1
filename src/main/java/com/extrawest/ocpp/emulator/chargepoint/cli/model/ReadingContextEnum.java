@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -24,13 +24,6 @@ public enum ReadingContextEnum {
     TRANSACTION_END("Transaction.End"),
     TRIGGER("Trigger");
     private final String value;
-    private final static Map<String, ReadingContextEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (ReadingContextEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     ReadingContextEnum(String value) {
         this.value = value;
@@ -48,12 +41,11 @@ public enum ReadingContextEnum {
 
     @JsonCreator
     public static ReadingContextEnum fromValue(String value) {
-        ReadingContextEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                ReadingContextEnum.class,
+                ReadingContextEnum::value,
+                value
+        );
     }
 
 }

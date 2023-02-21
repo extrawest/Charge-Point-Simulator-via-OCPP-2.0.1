@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -26,13 +26,6 @@ public enum AuthorizationStatusEnum {
     NOT_AT_THIS_TIME("NotAtThisTime"),
     UNKNOWN("Unknown");
     private final String value;
-    private final static Map<String, AuthorizationStatusEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (AuthorizationStatusEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     AuthorizationStatusEnum(String value) {
         this.value = value;
@@ -50,12 +43,11 @@ public enum AuthorizationStatusEnum {
 
     @JsonCreator
     public static AuthorizationStatusEnum fromValue(String value) {
-        AuthorizationStatusEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                AuthorizationStatusEnum.class,
+                AuthorizationStatusEnum::value,
+                value
+        );
     }
 
 }

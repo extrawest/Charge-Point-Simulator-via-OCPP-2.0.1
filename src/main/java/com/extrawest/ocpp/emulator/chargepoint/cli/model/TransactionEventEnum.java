@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -18,13 +18,6 @@ public enum TransactionEventEnum {
     STARTED("Started"),
     UPDATED("Updated");
     private final String value;
-    private final static Map<String, TransactionEventEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (TransactionEventEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     TransactionEventEnum(String value) {
         this.value = value;
@@ -42,12 +35,11 @@ public enum TransactionEventEnum {
 
     @JsonCreator
     public static TransactionEventEnum fromValue(String value) {
-        TransactionEventEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                TransactionEventEnum.class,
+                TransactionEventEnum::value,
+                value
+        );
     }
 
 }

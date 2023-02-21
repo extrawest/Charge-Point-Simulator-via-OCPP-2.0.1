@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -20,13 +20,6 @@ public enum MessageFormatEnum {
     URI("URI"),
     UTF_8("UTF8");
     private final String value;
-    private final static Map<String, MessageFormatEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (MessageFormatEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     MessageFormatEnum(String value) {
         this.value = value;
@@ -44,12 +37,11 @@ public enum MessageFormatEnum {
 
     @JsonCreator
     public static MessageFormatEnum fromValue(String value) {
-        MessageFormatEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                MessageFormatEnum.class,
+                MessageFormatEnum::value,
+                value
+        );
     }
 
 }

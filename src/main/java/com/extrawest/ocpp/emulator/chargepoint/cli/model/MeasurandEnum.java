@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -41,13 +41,6 @@ public enum MeasurandEnum {
     SO_C("SoC"),
     VOLTAGE("Voltage");
     private final String value;
-    private final static Map<String, MeasurandEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (MeasurandEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     MeasurandEnum(String value) {
         this.value = value;
@@ -65,12 +58,11 @@ public enum MeasurandEnum {
 
     @JsonCreator
     public static MeasurandEnum fromValue(String value) {
-        MeasurandEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                MeasurandEnum.class,
+                MeasurandEnum::value,
+                value
+        );
     }
 
 }

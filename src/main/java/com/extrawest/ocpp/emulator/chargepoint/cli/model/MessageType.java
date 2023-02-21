@@ -1,12 +1,17 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
 
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
+
 public enum MessageType {
 
-    CALL(2), CALLRESULT(3), CALLERROR(4);
+    CALL(2),
+    CALL_RESULT(3),
+    CALL_ERROR(4);
 
     private final int messageTypeId;
 

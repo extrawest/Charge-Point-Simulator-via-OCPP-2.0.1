@@ -5,7 +5,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.*;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.TransactionEventRequest;
-import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingRunnable;
+import com.extrawest.ocpp.emulator.chargepoint.cli.helper.ThrowingRunnable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

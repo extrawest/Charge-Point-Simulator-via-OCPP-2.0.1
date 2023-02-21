@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -16,13 +16,6 @@ public enum RequestStartStopStatusEnum {
     ACCEPTED("Accepted"),
     REJECTED("Rejected");
     private final String value;
-    private final static Map<String, RequestStartStopStatusEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (RequestStartStopStatusEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     RequestStartStopStatusEnum(String value) {
         this.value = value;
@@ -40,12 +33,11 @@ public enum RequestStartStopStatusEnum {
 
     @JsonCreator
     public static RequestStartStopStatusEnum fromValue(String value) {
-        RequestStartStopStatusEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                RequestStartStopStatusEnum.class,
+                RequestStartStopStatusEnum::value,
+                value
+        );
     }
 
 }

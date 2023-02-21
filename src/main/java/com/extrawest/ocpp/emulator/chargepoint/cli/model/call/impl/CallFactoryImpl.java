@@ -13,22 +13,22 @@ public class CallFactoryImpl implements CallFactory {
 
     @Override
     public Call<BootNotificationRequest> createCallFor(BootNotificationRequest bootNotificationRequest) {
-        return new Call<>(generateUniqueId(), CallAction.BootNotification, bootNotificationRequest);
+        return new Call<>(generateUniqueId(), CallAction.BOOT_NOTIFICATION, bootNotificationRequest);
     }
 
     @Override
     public Call<HeartbeatRequest> createCallFor(HeartbeatRequest heartbeatRequest) {
-        return new Call<>(generateUniqueId(), CallAction.Heartbeat, heartbeatRequest);
+        return new Call<>(generateUniqueId(), CallAction.HEARTBEAT, heartbeatRequest);
     }
 
     @Override
     public Call<AuthorizeRequest> createCallFor(AuthorizeRequest authorizeRequest) {
-        return new Call<>(generateUniqueId(), CallAction.Authorize, authorizeRequest);
+        return new Call<>(generateUniqueId(), CallAction.AUTHORIZE, authorizeRequest);
     }
 
     @Override
     public Call<TransactionEventRequest> createCallFor(TransactionEventRequest transactionEventRequest) {
-        return new Call<>(generateUniqueId(), CallAction.TransactionEvent, transactionEventRequest);
+        return new Call<>(generateUniqueId(), CallAction.TRANSACTION_EVENT, transactionEventRequest);
     }
 
     private String generateUniqueId() {
