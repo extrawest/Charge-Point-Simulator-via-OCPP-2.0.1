@@ -8,7 +8,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.model.ChargingStation;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.Modem;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.BootNotificationResponse;
-import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
+import com.extrawest.ocpp.emulator.chargepoint.cli.helper.ThrowingFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

@@ -5,7 +5,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ScheduledHeartbeatsStorage;
 import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.HeartbeatRequest;
-import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingRunnable;
+import com.extrawest.ocpp.emulator.chargepoint.cli.helper.ThrowingRunnable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

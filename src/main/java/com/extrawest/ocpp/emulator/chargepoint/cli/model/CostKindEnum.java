@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -19,13 +19,6 @@ public enum CostKindEnum {
     RELATIVE_PRICE_PERCENTAGE("RelativePricePercentage"),
     RENEWABLE_GENERATION_PERCENTAGE("RenewableGenerationPercentage");
     private final String value;
-    private final static Map<String, CostKindEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (CostKindEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     CostKindEnum(String value) {
         this.value = value;
@@ -43,12 +36,11 @@ public enum CostKindEnum {
 
     @JsonCreator
     public static CostKindEnum fromValue(String value) {
-        CostKindEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                CostKindEnum.class,
+                CostKindEnum::value,
+                value
+        );
     }
 
 }

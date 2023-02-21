@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -20,13 +20,6 @@ public enum ChargingProfilePurposeEnum {
     TX_DEFAULT_PROFILE("TxDefaultProfile"),
     TX_PROFILE("TxProfile");
     private final String value;
-    private final static Map<String, ChargingProfilePurposeEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (ChargingProfilePurposeEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     ChargingProfilePurposeEnum(String value) {
         this.value = value;
@@ -44,12 +37,11 @@ public enum ChargingProfilePurposeEnum {
 
     @JsonCreator
     public static ChargingProfilePurposeEnum fromValue(String value) {
-        ChargingProfilePurposeEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                ChargingProfilePurposeEnum.class,
+                ChargingProfilePurposeEnum::value,
+                value
+        );
     }
 
 }

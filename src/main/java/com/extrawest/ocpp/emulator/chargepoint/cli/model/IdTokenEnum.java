@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -22,13 +22,6 @@ public enum IdTokenEnum {
     MAC_ADDRESS("MacAddress"),
     NO_AUTHORIZATION("NoAuthorization");
     private final String value;
-    private final static Map<String, IdTokenEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (IdTokenEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     IdTokenEnum(String value) {
         this.value = value;
@@ -46,12 +39,11 @@ public enum IdTokenEnum {
 
     @JsonCreator
     public static IdTokenEnum fromValue(String value) {
-        IdTokenEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                IdTokenEnum.class,
+                IdTokenEnum::value,
+                value
+        );
     }
 
 }

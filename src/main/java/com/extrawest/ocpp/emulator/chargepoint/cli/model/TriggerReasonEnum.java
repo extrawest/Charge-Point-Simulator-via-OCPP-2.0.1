@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -35,13 +35,6 @@ public enum TriggerReasonEnum {
     SIGNED_DATA_RECEIVED("SignedDataReceived"),
     RESET_COMMAND("ResetCommand");
     private final String value;
-    private final static Map<String, TriggerReasonEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (TriggerReasonEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     TriggerReasonEnum(String value) {
         this.value = value;
@@ -59,12 +52,11 @@ public enum TriggerReasonEnum {
 
     @JsonCreator
     public static TriggerReasonEnum fromValue(String value) {
-        TriggerReasonEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                TriggerReasonEnum.class,
+                TriggerReasonEnum::value,
+                value
+        );
     }
 
 }

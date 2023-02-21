@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -35,13 +35,6 @@ public enum ReasonEnum {
     TIME_LIMIT_REACHED("TimeLimitReached"),
     TIMEOUT("Timeout");
     private final String value;
-    private final static Map<String, ReasonEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (ReasonEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     ReasonEnum(String value) {
         this.value = value;
@@ -59,12 +52,11 @@ public enum ReasonEnum {
 
     @JsonCreator
     public static ReasonEnum fromValue(String value) {
-        ReasonEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                ReasonEnum.class,
+                ReasonEnum::value,
+                value
+        );
     }
 
 }

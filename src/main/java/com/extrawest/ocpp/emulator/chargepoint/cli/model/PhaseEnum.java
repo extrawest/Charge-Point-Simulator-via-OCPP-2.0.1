@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -26,13 +26,6 @@ public enum PhaseEnum {
     L_2_L_3("L2-L3"),
     L_3_L_1("L3-L1");
     private final String value;
-    private final static Map<String, PhaseEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (PhaseEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     PhaseEnum(String value) {
         this.value = value;
@@ -50,12 +43,11 @@ public enum PhaseEnum {
 
     @JsonCreator
     public static PhaseEnum fromValue(String value) {
-        PhaseEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                PhaseEnum.class,
+                PhaseEnum::value,
+                value
+        );
     }
 
 }

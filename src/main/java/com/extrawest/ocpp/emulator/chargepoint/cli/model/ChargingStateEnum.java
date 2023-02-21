@@ -1,9 +1,9 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 
 /**
@@ -22,13 +22,6 @@ public enum ChargingStateEnum {
     SUSPENDED_EVSE("SuspendedEVSE"),
     IDLE("Idle");
     private final String value;
-    private final static Map<String, ChargingStateEnum> CONSTANTS = new HashMap<>();
-
-    static {
-        for (ChargingStateEnum c: values()) {
-            CONSTANTS.put(c.value, c);
-        }
-    }
 
     ChargingStateEnum(String value) {
         this.value = value;
@@ -46,12 +39,11 @@ public enum ChargingStateEnum {
 
     @JsonCreator
     public static ChargingStateEnum fromValue(String value) {
-        ChargingStateEnum constant = CONSTANTS.get(value);
-        if (constant == null) {
-            throw new IllegalArgumentException(value);
-        } else {
-            return constant;
-        }
+        return findByField(
+                ChargingStateEnum.class,
+                ChargingStateEnum::value,
+                value
+        );
     }
 
 }

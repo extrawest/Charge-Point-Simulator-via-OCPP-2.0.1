@@ -8,7 +8,7 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.model.IdTokenEnum;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.AuthorizeResponse;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.AuthorizeRequest;
 import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil;
-import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
+import com.extrawest.ocpp.emulator.chargepoint.cli.helper.ThrowingFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +28,7 @@ public class SendAuthorizeAction implements Consumer<ChargePointEmulator> {
 
     @Override
     public void accept(ChargePointEmulator chargePointEmulator) {
-        Optional.of(createAuthorizeRequestFor(chargePointEmulator))
+        Optional.of(createAuthorizeRequestFor())
             .map((ThrowingFunction<AuthorizeRequest, AuthorizeResponse>)
                 request -> {
                     var response = callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), request);
@@ -43,7 +43,7 @@ public class SendAuthorizeAction implements Consumer<ChargePointEmulator> {
             );
     }
 
-    private AuthorizeRequest createAuthorizeRequestFor(ChargePointEmulator chargePointEmulator) {
+    private AuthorizeRequest createAuthorizeRequestFor() {
         return AuthorizeRequest.builder()
                 .idToken(IdToken.builder()
                         .idToken(UUID.randomUUID().toString())

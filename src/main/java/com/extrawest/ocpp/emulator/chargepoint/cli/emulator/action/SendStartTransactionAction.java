@@ -4,12 +4,11 @@ import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.ChargePointEmulator;
 import com.extrawest.ocpp.emulator.chargepoint.cli.emulator.RequestSender;
 import com.extrawest.ocpp.emulator.chargepoint.cli.event.EmulationEventsListener;
 import com.extrawest.ocpp.emulator.chargepoint.cli.exception.IllegalStateApplicationException;
+import com.extrawest.ocpp.emulator.chargepoint.cli.exception.emulator.EmulationIOException;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.Transaction;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.TransactionEventEnum;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.TriggerReasonEnum;
 import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.TransactionEventRequest;
-import com.extrawest.ocpp.emulator.chargepoint.cli.model.payload.TransactionEventResponse;
-import com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowingFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +17,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+
+import static com.extrawest.ocpp.emulator.chargepoint.cli.util.ThrowReadablyUtil.unchecked;
 
 @RequiredArgsConstructor
 @Component
@@ -33,16 +34,18 @@ public class SendStartTransactionAction implements Consumer<ChargePointEmulator>
     public void accept(ChargePointEmulator chargePointEmulator) {
         chargePointEmulator.setCurrentTransactionId(UUID.randomUUID());
         Optional.of(createStartTransactionRequestFor(chargePointEmulator))
-            .map((ThrowingFunction<TransactionEventRequest, TransactionEventResponse>)
-                request -> {
-                    var response = callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), request);
-                    notifyStartTransactionSent(chargePointEmulator);
-                    return response;
+            .ifPresent(request -> {
+                try {
+                    callsSender.sendRequest(chargePointEmulator.getCentralSystemClient(), request);
+                } catch (EmulationIOException e) {
+                    throw unchecked(e);
                 }
+                notifyStartTransactionSent();
+            }
             );
     }
 
-    private void notifyStartTransactionSent(ChargePointEmulator chargePointEmulator) {
+    private void notifyStartTransactionSent() {
         emulationEventsListener.onStartTransactionSent();
     }
 

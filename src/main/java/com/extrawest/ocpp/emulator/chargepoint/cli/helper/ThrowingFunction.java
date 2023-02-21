@@ -1,4 +1,4 @@
-package com.extrawest.ocpp.emulator.chargepoint.cli.util;
+package com.extrawest.ocpp.emulator.chargepoint.cli.helper;
 
 import java.util.function.Function;
 
