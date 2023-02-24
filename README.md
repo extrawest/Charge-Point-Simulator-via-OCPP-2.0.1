@@ -1,11 +1,17 @@
-
+<a href="https://www.extrawest.com/"><img src="https://drive.google.com/uc?export=view&id=1kXfNj5WfW2oSMzQR82xYBI6Bw_W8-LpK" width="20%"></a>
 # Charge Point Simulator via OCPP 2.0.1
 
 "Charge Point Simulator via OCPP 2.0.1" is an application that simulates multiple charge points based on OCPP 2.0.1 protocol.
 
 This project is packaged as a Docker image, making it easy to deploy and run on any platform that supports Docker.
 
-
+## Badges
+![contr](https://img.shields.io/github/contributors/extrawest/Charge-Point-Simulator-via-OCPP-2.0.1?style=for-the-badge)
+![commits](https://img.shields.io/github/commit-activity/m/extrawest/Charge-Point-Simulator-via-OCPP-2.0.1?style=for-the-badge)
+![lastcommit](https://img.shields.io/github/last-commit/extrawest/Charge-Point-Simulator-via-OCPP-2.0.1?style=for-the-badge)
+![OCPP](https://img.shields.io/badge/OCPP-2.0.1-yellowgreen?style=for-the-badge)
+![JDK](https://img.shields.io/badge/JDK-17-yellow?style=for-the-badge)
+![social](https://img.shields.io/github/forks/extrawest/Charge-Point-Simulator-via-OCPP-2.0.1?style=for-the-badge)
 
 ## Field of use
 
@@ -20,10 +26,6 @@ Java simulator of OCPP 2.0 charge points is a software application that is desig
 **Flexibility**: The simulator can be configured to simulate different types of charging stations with different capabilities and configurations, allowing developers to test their systems under a variety of conditions.
 
 Overall, a Java simulator of OCPP 2.0 charge points is an important tool for developers, technicians, and support staff working with electric vehicle charging systems. It helps ensure that these systems are reliable, secure, and compatible with the OCPP 2.0 standard.
-## Badges
-
-
-
 
 
 ## Technologies used
@@ -59,7 +61,7 @@ To run this project, you will need to add the following environment variables to
 
 ### Run Local
 ```bash
-$ java -jar ocpp-charge-point-emulator-cli.jar -C "central system url" -S "count of charge points" -L "logging level"
+$ java -jar ocpp-charge-point-emulator-cli.jar -C $CENTRAL_SYSTEM_URL -S $CP_COUNT
 ```
 
 
@@ -72,5 +74,5 @@ $ docker build -t gitlab.extrawest.com:5050/i-ocpp/ocpp-station-emulation .
 
 When ready, run it:
 ```bash
-$ docker run --sysctl net.ipv4.ip_local_port_range="1024 65535" --rm -e ATTACH_JFR=true -v D:\:/jfr -e SPRING_PROFILES_ACTIVE=dev gitlab.extrawest.com:5050/i-ocpp/ocpp-station-emulation --csUrl "central system url" "count of charge points" -L "logging level"
+$ docker run --sysctl net.ipv4.ip_local_port_range="1024 65535" --rm -e ATTACH_JFR=true -v D:\:/jfr -e SPRING_PROFILES_ACTIVE=dev gitlab.extrawest.com:5050/i-ocpp/ocpp-station-emulation --csUrl $CENTRAL_SYSTEM_URL -S $CP_COUNT
 ```
