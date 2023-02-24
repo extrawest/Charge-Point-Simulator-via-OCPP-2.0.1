@@ -7,9 +7,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.Objects;
-
-
 /**
  * Message_ Content
  * urn:x-enexis:ecdm:uid:2:234490

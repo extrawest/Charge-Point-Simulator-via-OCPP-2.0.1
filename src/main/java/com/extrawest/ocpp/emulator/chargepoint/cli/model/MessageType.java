@@ -1,11 +1,8 @@
 package com.extrawest.ocpp.emulator.chargepoint.cli.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
-
-import static com.extrawest.ocpp.emulator.chargepoint.cli.util.EnumUtil.findByField;
 
 public enum MessageType {
 
