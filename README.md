@@ -67,12 +67,6 @@ $ java -jar ocpp-charge-point-emulator-cli.jar -C $CENTRAL_SYSTEM_URL -S $CP_COU
 
 ### Run Docker
 
-First build the image:
 ```bash
-$ docker build -t gitlab.extrawest.com:5050/i-ocpp/ocpp-station-emulation .
-```
-
-When ready, run it:
-```bash
-$ docker run --sysctl net.ipv4.ip_local_port_range="1024 65535" --rm -e ATTACH_JFR=true -v D:\:/jfr -e SPRING_PROFILES_ACTIVE=dev gitlab.extrawest.com:5050/i-ocpp/ocpp-station-emulation --csUrl $CENTRAL_SYSTEM_URL -S $CP_COUNT
+$ docker run --sysctl net.ipv4.ip_local_port_range="1024 65535" --rm -e ATTACH_JFR=true -v D:\:/jfr -e SPRING_PROFILES_ACTIVE=dev ghcr.io/extrawest/charge-point-simulator-via-ocpp-2.0.1:master --csUrl $CENTRAL_SYSTEM_URL -S $CP_COUNT
 ```
