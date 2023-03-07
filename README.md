@@ -6,6 +6,9 @@
 This project is packaged as a Docker image, making it easy to deploy and run on any platform that supports Docker.
 
 ## Badges
+
+![build](https://img.shields.io/github/actions/workflow/status/extrawest/Charge-Point-Simulator-via-OCPP-2.0.1/docker-image.yml?style=for-the-badge)
+![release](https://img.shields.io/github/v/release/extrawest/Charge-Point-Simulator-via-OCPP-2.0.1?style=for-the-badge)
 ![contr](https://img.shields.io/github/contributors/extrawest/Charge-Point-Simulator-via-OCPP-2.0.1?style=for-the-badge)
 ![commits](https://img.shields.io/github/commit-activity/m/extrawest/Charge-Point-Simulator-via-OCPP-2.0.1?style=for-the-badge)
 ![lastcommit](https://img.shields.io/github/last-commit/extrawest/Charge-Point-Simulator-via-OCPP-2.0.1?style=for-the-badge)
